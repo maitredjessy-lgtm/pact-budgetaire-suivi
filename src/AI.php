@@ -63,14 +63,6 @@ class AI
         return $k === '' ? '(vide)' : substr($k, 0, 4) . '… (' . strlen($k) . ' caractères)';
     }
 
-    /** Diagnostic lisible si la cle n'a manifestement pas le bon format */
-    private static function verifierFormatCle(): void
-    {
-        if (self::provider() === 'gemini' && self::key() !== '' && !str_starts_with(self::key(), 'AIza')) {
-            throw new RuntimeException("La valeur de AI_API_KEY dans Render n'est pas une clé reconnue. Clés acceptées : Gemini (commence par « AIza »), Groq (« gsk_ ») ou OpenRouter (« sk-or- »).");
-        }
-    }
-
     public static function isConfigured(): bool
     {
         // Un serveur Ollama local peut fonctionner sans cle
@@ -86,7 +78,6 @@ class AI
         if (!self::isConfigured()) {
             throw new RuntimeException("L'IA n'est pas configurée : ajoutez la variable d'environnement AI_API_KEY (clé Gemini gratuite sur https://aistudio.google.com/apikey).");
         }
-        self::verifierFormatCle();
         return self::provider() !== 'gemini'
             ? self::openai($system, $messages, $temperature, $maxTokens)
             : self::gemini($system, $messages, $temperature, $maxTokens);
@@ -159,7 +150,9 @@ class AI
             if ($code === 429) {
                 $msg = "Quota gratuit momentanément atteint, réessayez dans une minute. ({$msg})";
             } elseif (stripos($msg, 'API key not valid') !== false || stripos($msg, 'API_KEY_INVALID') !== false || $code === 401) {
-                $msg = "Le fournisseur d'IA refuse la clé AI_API_KEY enregistrée dans Render (clé invalide, supprimée ou mal copiée). Créez une nouvelle clé (Gemini : https://aistudio.google.com/apikey — Groq : https://console.groq.com/keys) et remplacez la valeur dans Render > Environment.";
+                $msg = "Le fournisseur d'IA (" . self::provider() . ") refuse la clé AI_API_KEY enregistrée dans Render — valeur lue : « " . self::apercuCle() . " ». "
+                    . "Une clé Gemini fait environ 39 caractères, une clé Groq commence par « gsk_ ». "
+                    . "Si ce début ne correspond pas à votre clé, la valeur collée dans Render n'est pas la bonne : recopiez la clé avec le bouton de copie du site (Gemini : https://aistudio.google.com/apikey — Groq : https://console.groq.com/keys).";
             } elseif ($code === 403) {
                 $msg = "Accès refusé par Google : la clé n'autorise pas l'API Gemini (créez-la depuis AI Studio plutôt que depuis Google Cloud). ({$msg})";
             }
