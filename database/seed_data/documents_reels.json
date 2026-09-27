@@ -1,0 +1,933 @@
+[
+    {
+        "titre":  "ATELIER DE PRÉSENTATION DE LA MÉTHODOLOGIE DE CARTOGRAPHIE DES OSC",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2025-10-10",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee1_2025-2026\\ATELIER DE PRÉSENTATION DE LA MÉTHODOLOGIE DE CARTOGRAPHIE DES OSC.docx"
+    },
+    {
+        "titre":  "ATELIER DE PRÉSENTATION DES RÉSULTATS DE LA CARTOGRAPHIE DES ORGANISATIONS DE LA SOCIÉTÉ CIVILE (OSC)",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2025-12-22",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee1_2025-2026\\ATELIER DE PRÉSENTATION DES RÉSULTATS DE LA CARTOGRAPHIE DES ORGANISATIONS DE LA SOCIÉTÉ CIVILE (OSC).docx"
+    },
+    {
+        "titre":  "ATELIER DE PRÉSENTATION DES RÉSULTATS DE LA CARTOGRAPHIE DES ORGANISATIONS DE LA SOCIÉTÉ CIVILE (OSC) 1",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2025-10-10",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee1_2025-2026\\ATELIER DE PRÉSENTATION DES RÉSULTATS DE LA CARTOGRAPHIE DES ORGANISATIONS DE LA SOCIÉTÉ CIVILE (OSC)_1.docx"
+    },
+    {
+        "titre":  "TDR Atelier de partage et d\u0027échanges sur le RTEB 9dec 2025",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2025-11-26",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee1_2025-2026\\TDR Atelier de partage et d\u0027échanges sur le RTEB 9dec 2025.pdf"
+    },
+    {
+        "titre":  "TDR ATELIER DE REDINAMISATION DE COST BUDGET",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2025-10-10",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee1_2025-2026\\TDR ATELIER DE REDINAMISATION DE COST BUDGET.docx"
+    },
+    {
+        "titre":  "TDR ATELIERS DE PARTAGE DES BONNES PRATIQUES OGP",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2026-04-10",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee1_2025-2026\\TDR ATELIERS DE PARTAGE DES BONNES PRATIQUES OGP.docx"
+    },
+    {
+        "titre":  "TDR ATELIERS D’ÉCHANGE AVEC LE MINISTÈRE DES FINANCES ET DU BUDGET (MFB) SUR LA BUDGÉTISATION SENSIBLE AU GENRE (BSG",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2026-01-21",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee1_2025-2026\\TDR ATELIERS D’ÉCHANGE AVEC LE MINISTÈRE DES FINANCES ET DU BUDGET (MFB) SUR LA BUDGÉTISATION SENSIBLE AU GENRE (BSG.docx"
+    },
+    {
+        "titre":  "TDR CHOIX PERSONNE RESSOURCE CARTO",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2025-11-19",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee1_2025-2026\\TDR CHOIX PERSONNE RESSOURCE CARTO.docx"
+    },
+    {
+        "titre":  "TDR DPBEP",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2026-04-10",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee1_2025-2026\\TDR DPBEP.docx"
+    },
+    {
+        "titre":  "tdr lancement",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2025-07-24",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee1_2025-2026\\tdr lancement.pdf"
+    },
+    {
+        "titre":  "TDR PRIX ANNUEL TRANS",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2026-04-10",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee1_2025-2026\\TDR PRIX ANNUEL TRANS.docx"
+    },
+    {
+        "titre":  "TDR PRIX HACKATHON",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2026-04-10",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee1_2025-2026\\TDR PRIX HACKATHON.docx"
+    },
+    {
+        "titre":  "TDR RTBE",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2026-04-10",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee1_2025-2026\\TDR RTBE.docx"
+    },
+    {
+        "titre":  "TDR Sessions trimestrielles d’échanges et de partage sur (RTEB) entre la DGBF et la société civile",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2025-10-17",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee1_2025-2026\\TDR Sessions trimestrielles d’échanges et de partage sur (RTEB) entre la DGBF et la société civile.docx"
+    },
+    {
+        "titre":  "TDR. Ateliers de formation de la société civile et des médias sur les techniques d’exploitation des rapports d’audit sur les finances publiques par la Cour des Comptes",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2025-10-17",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee1_2025-2026\\TDR. Ateliers de formation de la société civile et des médias sur les techniques d’exploitation des rapports d’audit sur les finances publiques par la Cour des Comptes.docx"
+    },
+    {
+        "titre":  "TDRs atelier de formation des OSC et des médias sur les techniques d\u0027analyse des rapports de la CDC",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2025-11-10",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee1_2025-2026\\TDRs atelier de formation des OSC et des médias sur les techniques d\u0027analyse des rapports de la CDC.docx"
+    },
+    {
+        "titre":  "TDRs atelier de redynamisation COST BUDGET",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2025-11-10",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee1_2025-2026\\TDRs atelier de redynamisation COST BUDGET.docx"
+    },
+    {
+        "titre":  "TDRs atelier de restitution des résultats de la cartographie",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2025-11-10",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee1_2025-2026\\TDRs atelier de restitution des résultats de la cartographie.docx"
+    },
+    {
+        "titre":  "TDRs atelier information méthodologie cartographie",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2025-11-28",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee1_2025-2026\\TDRs atelier information méthodologie cartographie.docx"
+    },
+    {
+        "titre":  "TDRs final lancement PACT BUDGETAIRE",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2025-07-02",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee1_2025-2026\\TDRs final lancement PACT BUDGETAIRE[1].docx"
+    },
+    {
+        "titre":  "TDRs sessions trimestrielles d\u0027éxécution budgétaires",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2025-11-10",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee1_2025-2026\\TDRs sessions trimestrielles d\u0027éxécution budgétaires.docx"
+    },
+    {
+        "titre":  "Tdrs-Atelier d\u0027échanges sur le BSG en CIV - 9 juillet",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2026-06-20",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee1_2025-2026\\Tdrs-Atelier d\u0027échanges sur le BSG en CIV - 9 juillet.docx"
+    },
+    {
+        "titre":  "Tdrs Atelier de lancement Résultats EBO 2025 en CIV",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2026-06-20",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee1_2025-2026\\Tdrs_Atelier de lancement Résultats EBO 2025 en CIV.DOC"
+    },
+    {
+        "titre":  "TDR Sous-Activite 2.3.1 Cadre Echange DGBF SC",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2026-06-24",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee1_2025-2026\\TDR_Sous-Activite_2.3.1_Cadre_Echange_DGBF_SC.docx"
+    },
+    {
+        "titre":  "TDR Sous-Activite 2.3.3 Sessions RTEB DGBF SC",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2026-06-24",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee1_2025-2026\\TDR_Sous-Activite_2.3.3_Sessions_RTEB_DGBF_SC.docx"
+    },
+    {
+        "titre":  "TERMES DE REFERENCE ATELIER 1 DE REDYNAMISATION COST BUDGET",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2026-01-21",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee1_2025-2026\\TERMES DE REFERENCE ATELIER 1 DE REDYNAMISATION COST BUDGET.docx"
+    },
+    {
+        "titre":  "TERMES DE RÉFÉRENCE POUR LA CARTOGRAPHIE DES ORGANISATIONS DE LA SOCIÉTÉ CIVILE",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2025-10-01",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee1_2025-2026\\TERMES DE RÉFÉRENCE POUR LA CARTOGRAPHIE DES ORGANISATIONS DE LA SOCIÉTÉ CIVILE.docx"
+    },
+    {
+        "titre":  "TDR 1.2.2 Formation-OSC-faitieres Inclusion-budgetaire v1",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2026-09-04",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee2_2026-2027\\TDR_1.2.2_Formation-OSC-faitieres_Inclusion-budgetaire_v1.docx"
+    },
+    {
+        "titre":  "TDR Module Formation DPBEP",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2026-07-02",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee2_2026-2027\\TDR_Module_Formation_DPBEP.docx"
+    },
+    {
+        "titre":  "TDR Module Formation DPBEP v2 diplomatique",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2026-08-03",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee2_2026-2027\\TDR_Module_Formation_DPBEP_v2_diplomatique.docx"
+    },
+    {
+        "titre":  "TDR SousActivite 2.3.2 Session Annuelle DPBEP revise",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2026-08-31",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee2_2026-2027\\TDR_SousActivite_2.3.2_Session_Annuelle_DPBEP_revise.docx"
+    },
+    {
+        "titre":  "TDR SousActivite 2.3.3 Premiere Session RTEB revise",
+        "type":  "tdr",
+        "statut":  "valide",
+        "date_finalisation":  "2026-08-31",
+        "notes":  "Fichier local : 02_TDR\\TDR_Annee2_2026-2027\\TDR_SousActivite_2.3.3_Premiere_Session_RTEB_revise.docx"
+    },
+    {
+        "titre":  "Courrier AFJCI",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-07-08",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Courrier AFJCI.docx"
+    },
+    {
+        "titre":  "Courrier ANJ-CIV",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-07-08",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Courrier ANJ-CIV.docx"
+    },
+    {
+        "titre":  "Courrier Banque Mondiale",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-07-07",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Courrier Banque Mondiale.docx"
+    },
+    {
+        "titre":  "Courrier CAEF",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-07-07",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Courrier CAEF.docx"
+    },
+    {
+        "titre":  "Courrier cc",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-07-07",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Courrier cc.docx"
+    },
+    {
+        "titre":  "Courrier CIVIS",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-07-08",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Courrier CIVIS.docx"
+    },
+    {
+        "titre":  "Courrier CNJCI",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-07-08",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Courrier CNJCI.docx"
+    },
+    {
+        "titre":  "Courrier CREFDI",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-07-08",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Courrier CREFDI.docx"
+    },
+    {
+        "titre":  "Courrier CSCI",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-07-08",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Courrier CSCI.docx"
+    },
+    {
+        "titre":  "Courrier d\u0027invitation atélier présentation de méthodologie",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-11-10",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Courrier d\u0027invitation atélier présentation de méthodologie.docx"
+    },
+    {
+        "titre":  "Courrier d\u0027invitation atélier présentation de méthodologie 1",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-11-02",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Courrier d\u0027invitation atélier présentation de méthodologie_1.docx"
+    },
+    {
+        "titre":  "Courrier FENOCI",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-07-08",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Courrier FENOCI.docx"
+    },
+    {
+        "titre":  "Courrier FMI",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-07-07",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Courrier FMI.docx"
+    },
+    {
+        "titre":  "Courrier FRAT MAT",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-07-07",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Courrier FRAT MAT.docx"
+    },
+    {
+        "titre":  "Courrier GIZ",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-07-07",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Courrier GIZ.docx"
+    },
+    {
+        "titre":  "Courrier Le SURSAUT",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-07-07",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Courrier Le SURSAUT.docx"
+    },
+    {
+        "titre":  "Courrier LIFE TV",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-07-07",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Courrier LIFE TV.docx"
+    },
+    {
+        "titre":  "Courrier NCI",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-07-07",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Courrier NCI.docx"
+    },
+    {
+        "titre":  "Courrier PCQVP",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-07-08",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Courrier PCQVP.docx"
+    },
+    {
+        "titre":  "Courrier PPRC",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-07-07",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Courrier PPRC.docx"
+    },
+    {
+        "titre":  "Courrier PSCI-PGO",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-07-08",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Courrier PSCI-PGO.docx"
+    },
+    {
+        "titre":  "Courrier REJABA",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-07-08",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Courrier REJABA.docx"
+    },
+    {
+        "titre":  "Courrier RIDDEF",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-07-08",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Courrier RIDDEF.docx"
+    },
+    {
+        "titre":  "Courrier RIJLI",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-07-08",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Courrier RIJLI.docx"
+    },
+    {
+        "titre":  "Courrier RIL",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-07-08",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Courrier RIL.docx"
+    },
+    {
+        "titre":  "Courrier Transparence Justice",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-07-08",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Courrier Transparence Justice.docx"
+    },
+    {
+        "titre":  "Courrier WILDAF",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-07-08",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Courrier WILDAF.docx"
+    },
+    {
+        "titre":  "Demande de couverture mediatique lancement",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-07-02",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Demande de couverture mediatique lancement[1].docx"
+    },
+    {
+        "titre":  "Invitation OSC - Atelier BSG - 9 juillet",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2026-07-03",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Invitation OSC - Atelier BSG - 9 juillet.docx"
+    },
+    {
+        "titre":  "Invitation OSC - Atelier EBO 2025 - 3 juillet",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2026-06-22",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Invitation OSC - Atelier EBO 2025 - 3 juillet.docx"
+    },
+    {
+        "titre":  "Invitation OSC - Atelier lancement EBO 2025 - 3 juillet",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2026-06-20",
+        "notes":  "Fichier local : 03_COURRIERS\\3.1_Courriers_OSC_et_medias\\Invitation OSC - Atelier lancement EBO 2025 - 3 juillet.docx"
+    },
+    {
+        "titre":  "BSG DGBF",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2026-01-26",
+        "notes":  "Fichier local : 03_COURRIERS\\3.2_Courriers_institutions_et_PTF\\BSG DGBF.docx"
+    },
+    {
+        "titre":  "Convocation COPIL CC",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2026-01-26",
+        "notes":  "Fichier local : 03_COURRIERS\\3.2_Courriers_institutions_et_PTF\\Convocation COPIL CC.docx"
+    },
+    {
+        "titre":  "Convocation COPIL DGBF",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2026-01-26",
+        "notes":  "Fichier local : 03_COURRIERS\\3.2_Courriers_institutions_et_PTF\\Convocation COPIL DGBF.docx"
+    },
+    {
+        "titre":  "Convocation COPIL PPRC",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2026-01-27",
+        "notes":  "Fichier local : 03_COURRIERS\\3.2_Courriers_institutions_et_PTF\\Convocation COPIL PPRC.docx"
+    },
+    {
+        "titre":  "Convocation COPIL UE",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2026-01-26",
+        "notes":  "Fichier local : 03_COURRIERS\\3.2_Courriers_institutions_et_PTF\\Convocation COPIL UE.docx"
+    },
+    {
+        "titre":  "COURRIER COURS DES COMPTES",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-11-19",
+        "notes":  "Fichier local : 03_COURRIERS\\3.2_Courriers_institutions_et_PTF\\COURRIER COURS DES COMPTES.docx"
+    },
+    {
+        "titre":  "COURRIER SEANCE DE TRAVAIL PPRC",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-11-19",
+        "notes":  "Fichier local : 03_COURRIERS\\3.2_Courriers_institutions_et_PTF\\COURRIER SEANCE DE TRAVAIL PPRC.docx"
+    },
+    {
+        "titre":  "courrier UE Résultat cartographie",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-12-18",
+        "notes":  "Fichier local : 03_COURRIERS\\3.2_Courriers_institutions_et_PTF\\courrier UE Résultat cartographie.docx"
+    },
+    {
+        "titre":  "Courrier Union Européenne",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2026-05-13",
+        "notes":  "Fichier local : 03_COURRIERS\\3.2_Courriers_institutions_et_PTF\\Courrier Union Européenne.docx"
+    },
+    {
+        "titre":  "Courrier CAEF Demande Seance Travail PACT BUDGETAIRE",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2026-08-23",
+        "notes":  "Fichier local : 03_COURRIERS\\3.2_Courriers_institutions_et_PTF\\Courrier_CAEF_Demande_Seance_Travail_PACT_BUDGETAIRE.docx"
+    },
+    {
+        "titre":  "Courrier DGBF Programmation Activites Aout Septembre 2026",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2026-08-18",
+        "notes":  "Fichier local : 03_COURRIERS\\3.2_Courriers_institutions_et_PTF\\Courrier_DGBF_Programmation_Activites_Aout_Septembre_2026.docx"
+    },
+    {
+        "titre":  "Courrier DGBF Programmation Activites Septembre 2026",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2026-08-18",
+        "notes":  "Fichier local : 03_COURRIERS\\3.2_Courriers_institutions_et_PTF\\Courrier_DGBF_Programmation_Activites_Septembre_2026.docx"
+    },
+    {
+        "titre":  "Courrier DGBF TDR Formation DPBEP",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2026-07-02",
+        "notes":  "Fichier local : 03_COURRIERS\\3.2_Courriers_institutions_et_PTF\\Courrier_DGBF_TDR_Formation_DPBEP.docx"
+    },
+    {
+        "titre":  "Courrier DGBF TDR Formation DPBEP v2 diplomatique",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2026-08-03",
+        "notes":  "Fichier local : 03_COURRIERS\\3.2_Courriers_institutions_et_PTF\\Courrier_DGBF_TDR_Formation_DPBEP_v2_diplomatique.docx"
+    },
+    {
+        "titre":  "Courrier Invitation DGBF Atelier BSG 9juillet NEW",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2026-07-01",
+        "notes":  "Fichier local : 03_COURRIERS\\3.2_Courriers_institutions_et_PTF\\Courrier_Invitation_DGBF_Atelier_BSG_9juillet_NEW.docx"
+    },
+    {
+        "titre":  "Courrier Invitation MFFE Atelier BSG 9juillet",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2026-06-25",
+        "notes":  "Fichier local : 03_COURRIERS\\3.2_Courriers_institutions_et_PTF\\Courrier_Invitation_MFFE_Atelier_BSG_9juillet.docx"
+    },
+    {
+        "titre":  "Courrier Invitation MFFE Atelier BSG 9juillet NEW",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2026-06-30",
+        "notes":  "Fichier local : 03_COURRIERS\\3.2_Courriers_institutions_et_PTF\\Courrier_Invitation_MFFE_Atelier_BSG_9juillet_NEW.docx"
+    },
+    {
+        "titre":  "Courrier Invitation PAGOF Atelier EBO 3juillet",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2026-07-01",
+        "notes":  "Fichier local : 03_COURRIERS\\3.2_Courriers_institutions_et_PTF\\Courrier_Invitation_PAGOF_Atelier_EBO_3juillet.docx"
+    },
+    {
+        "titre":  "Courrier MFFE seance travail BSG",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2026-05-13",
+        "notes":  "Fichier local : 03_COURRIERS\\3.2_Courriers_institutions_et_PTF\\Courrier_MFFE_seance_travail_BSG.docx"
+    },
+    {
+        "titre":  "Demande de co presidence  UE lancement PACT BUDGETAIRE",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-07-03",
+        "notes":  "Fichier local : 03_COURRIERS\\3.2_Courriers_institutions_et_PTF\\Demande de co presidence  UE lancement PACT BUDGETAIRE[1].docx"
+    },
+    {
+        "titre":  "Demande de presidence MFB lancement PACT BUDGETAIRE final",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2025-07-03",
+        "notes":  "Fichier local : 03_COURRIERS\\3.2_Courriers_institutions_et_PTF\\Demande de presidence MFB lancement PACT BUDGETAIRE final[1].docx"
+    },
+    {
+        "titre":  "DRAFT COURRIER COUR DES COMPTES",
+        "type":  "courrier",
+        "statut":  "brouillon",
+        "date_finalisation":  "2026-02-19",
+        "notes":  "Fichier local : 03_COURRIERS\\3.2_Courriers_institutions_et_PTF\\DRAFT COURRIER COUR DES COMPTES.docx"
+    },
+    {
+        "titre":  "MÉMORANDUM Collab avec la Cour des Comptes  IBP Review",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2026-05-22",
+        "notes":  "Fichier local : 03_COURRIERS\\3.2_Courriers_institutions_et_PTF\\MÉMORANDUM Collab avec la Cour des Comptes _IBP Review.docx"
+    },
+    {
+        "titre":  "MÉMORANDUM DE PLAIDOYER DGBF",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2026-01-26",
+        "notes":  "Fichier local : 03_COURRIERS\\3.2_Courriers_institutions_et_PTF\\MÉMORANDUM DE PLAIDOYER DGBF.docx"
+    },
+    {
+        "titre":  "MÉMORANDUM Collab Cour des Comptes enrichi",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2026-07-13",
+        "notes":  "Fichier local : 03_COURRIERS\\3.2_Courriers_institutions_et_PTF\\MÉMORANDUM_Collab_Cour_des_Comptes_enrichi.docx"
+    },
+    {
+        "titre":  "RECOMMANDATIONS DGBF",
+        "type":  "courrier",
+        "statut":  "envoye",
+        "date_finalisation":  "2026-01-26",
+        "notes":  "Fichier local : 03_COURRIERS\\3.2_Courriers_institutions_et_PTF\\RECOMMANDATIONS DGBF.docx"
+    },
+    {
+        "titre":  "RAP MÉTHODOLOGIE DE CARTOGRAPHIE DES 30 OSC SECTORIELLES",
+        "type":  "rapport",
+        "statut":  "valide",
+        "date_finalisation":  "2025-12-13",
+        "notes":  "Fichier local : 04_RAPPORTS\\4.1_Rapports_ateliers_et_activites\\RAP MÉTHODOLOGIE DE CARTOGRAPHIE DES 30 OSC SECTORIELLES.docx"
+    },
+    {
+        "titre":  "RAPPORT  d\u0027atelier d\u0027échange sur les RTEB de la DGBF",
+        "type":  "rapport",
+        "statut":  "valide",
+        "date_finalisation":  "2026-01-16",
+        "notes":  "Fichier local : 04_RAPPORTS\\4.1_Rapports_ateliers_et_activites\\RAPPORT  d\u0027atelier d\u0027échange sur les RTEB de la DGBF.docx"
+    },
+    {
+        "titre":  "RAPPORT ACTIVITE DE LANCEMENT",
+        "type":  "rapport",
+        "statut":  "valide",
+        "date_finalisation":  "2025-07-25",
+        "notes":  "Fichier local : 04_RAPPORTS\\4.1_Rapports_ateliers_et_activites\\RAPPORT ACTIVITE DE LANCEMENT.docx"
+    },
+    {
+        "titre":  "Rapport Atelier BSG - 09 juillet 2026 (v2 - avec mot introduction President)",
+        "type":  "rapport",
+        "statut":  "valide",
+        "date_finalisation":  "2026-07-28",
+        "notes":  "Fichier local : 04_RAPPORTS\\4.1_Rapports_ateliers_et_activites\\Rapport Atelier BSG - 09 juillet 2026 (v2 - avec mot introduction President).docx"
+    },
+    {
+        "titre":  "Rapport Atelier BSG - 09 juillet 2026",
+        "type":  "rapport",
+        "statut":  "valide",
+        "date_finalisation":  "2026-07-21",
+        "notes":  "Fichier local : 04_RAPPORTS\\4.1_Rapports_ateliers_et_activites\\Rapport Atelier BSG - 09 juillet 2026.docx"
+    },
+    {
+        "titre":  "RAPPORT ATELIER DE PRÉSENTATION DE LA CARTOGRAPHIE",
+        "type":  "rapport",
+        "statut":  "valide",
+        "date_finalisation":  "2026-02-10",
+        "notes":  "Fichier local : 04_RAPPORTS\\4.1_Rapports_ateliers_et_activites\\RAPPORT ATELIER DE PRÉSENTATION DE LA CARTOGRAPHIE.docx"
+    },
+    {
+        "titre":  "Rapport Atelier de présentations de la méthodologie de cartographie",
+        "type":  "rapport",
+        "statut":  "valide",
+        "date_finalisation":  "2025-11-20",
+        "notes":  "Fichier local : 04_RAPPORTS\\4.1_Rapports_ateliers_et_activites\\Rapport Atelier de présentations de la méthodologie de cartographie.docx"
+    },
+    {
+        "titre":  "RAPPORT D\u0027ATELIER METHODOLOGIE DE CARTOGRAPHIE",
+        "type":  "rapport",
+        "statut":  "valide",
+        "date_finalisation":  "2025-11-14",
+        "notes":  "Fichier local : 04_RAPPORTS\\4.1_Rapports_ateliers_et_activites\\RAPPORT D\u0027ATELIER METHODOLOGIE DE CARTOGRAPHIE.docx"
+    },
+    {
+        "titre":  "BILAN TRIMESTRIEL PACT BUDGETAIRE Mars-Mai 2026",
+        "type":  "rapport",
+        "statut":  "valide",
+        "date_finalisation":  "2026-05-20",
+        "notes":  "Fichier local : 04_RAPPORTS\\4.2_Rapports_narratifs_et_bilans\\BILAN_TRIMESTRIEL_PACT_BUDGETAIRE_Mars-Mai_2026.docx"
+    },
+    {
+        "titre":  "Rapport Narratif premier semestre",
+        "type":  "rapport",
+        "statut":  "valide",
+        "date_finalisation":  "2026-02-10",
+        "notes":  "Fichier local : 04_RAPPORTS\\4.2_Rapports_narratifs_et_bilans\\Rapport Narratif premier semestre.docx"
+    },
+    {
+        "titre":  "RAPPORT ANNUEL ANNEE1 PACT BUDGETAIRE Juil2025-Juin2026",
+        "type":  "rapport",
+        "statut":  "valide",
+        "date_finalisation":  "2026-07-11",
+        "notes":  "Fichier local : 04_RAPPORTS\\4.2_Rapports_narratifs_et_bilans\\RAPPORT_ANNUEL_ANNEE1_PACT_BUDGETAIRE_Juil2025-Juin2026.docx"
+    },
+    {
+        "titre":  "RAPPORT NARRATIF Annee 1 PACT BUDGETAIRE 2025 2026 v3",
+        "type":  "rapport",
+        "statut":  "valide",
+        "date_finalisation":  "2026-08-10",
+        "notes":  "Fichier local : 04_RAPPORTS\\4.2_Rapports_narratifs_et_bilans\\RAPPORT_NARRATIF_Annee 1_PACT_BUDGETAIRE_2025_2026 v3.docx"
+    },
+    {
+        "titre":  "RAPPORT NARRATIF S2 PACT BUDGETAIRE Janv-Juin 2026",
+        "type":  "rapport",
+        "statut":  "valide",
+        "date_finalisation":  "2026-07-01",
+        "notes":  "Fichier local : 04_RAPPORTS\\4.2_Rapports_narratifs_et_bilans\\RAPPORT_NARRATIF_S2_PACT_BUDGETAIRE_Janv-Juin_2026.docx"
+    },
+    {
+        "titre":  "Résumé activité 2025 Pact budgétaire",
+        "type":  "rapport",
+        "statut":  "valide",
+        "date_finalisation":  "2026-04-09",
+        "notes":  "Fichier local : 04_RAPPORTS\\4.2_Rapports_narratifs_et_bilans\\Résumé activité 2025 Pact budgétaire.docx"
+    },
+    {
+        "titre":  "AUDIENCE CAEF",
+        "type":  "rapport",
+        "statut":  "valide",
+        "date_finalisation":  "2026-01-13",
+        "notes":  "Fichier local : 04_RAPPORTS\\4.3_Comptes_rendus_audiences_et_reunions\\AUDIENCE CAEF.docx"
+    },
+    {
+        "titre":  "AUDIENCE COUR DES COMPTES",
+        "type":  "rapport",
+        "statut":  "valide",
+        "date_finalisation":  "2026-02-04",
+        "notes":  "Fichier local : 04_RAPPORTS\\4.3_Comptes_rendus_audiences_et_reunions\\AUDIENCE COUR DES COMPTES.docx"
+    },
+    {
+        "titre":  "audience OGP",
+        "type":  "rapport",
+        "statut":  "valide",
+        "date_finalisation":  "2026-01-13",
+        "notes":  "Fichier local : 04_RAPPORTS\\4.3_Comptes_rendus_audiences_et_reunions\\audience OGP.docx"
+    },
+    {
+        "titre":  "AUDIENCE PPRC",
+        "type":  "rapport",
+        "statut":  "valide",
+        "date_finalisation":  "2026-01-16",
+        "notes":  "Fichier local : 04_RAPPORTS\\4.3_Comptes_rendus_audiences_et_reunions\\AUDIENCE PPRC.docx"
+    },
+    {
+        "titre":  "Compte rendu audience Cour des comptes",
+        "type":  "rapport",
+        "statut":  "valide",
+        "date_finalisation":  "2026-02-05",
+        "notes":  "Fichier local : 04_RAPPORTS\\4.3_Comptes_rendus_audiences_et_reunions\\Compte rendu audience Cour des comptes.docx"
+    },
+    {
+        "titre":  "Compte rendu rencontre Cour des Comptes - juillet 2026",
+        "type":  "rapport",
+        "statut":  "valide",
+        "date_finalisation":  "2026-07-11",
+        "notes":  "Fichier local : 04_RAPPORTS\\4.3_Comptes_rendus_audiences_et_reunions\\Compte rendu rencontre Cour des Comptes - juillet 2026.docx"
+    },
+    {
+        "titre":  "Compte rendu réunion CAEF - 08 septembre 2026 - Copie",
+        "type":  "rapport",
+        "statut":  "valide",
+        "date_finalisation":  "2026-09-09",
+        "notes":  "Fichier local : 04_RAPPORTS\\4.3_Comptes_rendus_audiences_et_reunions\\Compte rendu réunion CAEF - 08 septembre 2026 - Copie.docx"
+    },
+    {
+        "titre":  "Compte rendu réunion CAEF - 08 septembre 2026",
+        "type":  "rapport",
+        "statut":  "valide",
+        "date_finalisation":  "2026-09-09",
+        "notes":  "Fichier local : 04_RAPPORTS\\4.3_Comptes_rendus_audiences_et_reunions\\Compte rendu réunion CAEF - 08 septembre 2026.docx"
+    },
+    {
+        "titre":  "Compte rendu réunion Cour des Comptes - 10 juillet 2026 (v2)",
+        "type":  "rapport",
+        "statut":  "valide",
+        "date_finalisation":  "2026-08-04",
+        "notes":  "Fichier local : 04_RAPPORTS\\4.3_Comptes_rendus_audiences_et_reunions\\Compte rendu réunion Cour des Comptes - 10 juillet 2026 (v2).docx"
+    },
+    {
+        "titre":  "Compte rendu réunion Cour des Comptes - 10 juillet 2026 (v3 - benchmark)",
+        "type":  "rapport",
+        "statut":  "valide",
+        "date_finalisation":  "2026-08-04",
+        "notes":  "Fichier local : 04_RAPPORTS\\4.3_Comptes_rendus_audiences_et_reunions\\Compte rendu réunion Cour des Comptes - 10 juillet 2026 (v3 - benchmark).docx"
+    },
+    {
+        "titre":  "Compte rendu réunion UE",
+        "type":  "rapport",
+        "statut":  "valide",
+        "date_finalisation":  "2026-02-10",
+        "notes":  "Fichier local : 04_RAPPORTS\\4.3_Comptes_rendus_audiences_et_reunions\\Compte rendu réunion UE .docx"
+    },
+    {
+        "titre":  "RAPPORT AUDIENCE CAEF - 08 septembre 2026",
+        "type":  "rapport",
+        "statut":  "valide",
+        "date_finalisation":  "2026-09-09",
+        "notes":  "Fichier local : 04_RAPPORTS\\4.3_Comptes_rendus_audiences_et_reunions\\RAPPORT AUDIENCE CAEF - 08 septembre 2026.docx"
+    },
+    {
+        "titre":  "Rapport de réunion - EBO 2025 Côte d\u0027Ivoire (v1 - révisé)",
+        "type":  "rapport",
+        "statut":  "valide",
+        "date_finalisation":  "2026-08-18",
+        "notes":  "Fichier local : 04_RAPPORTS\\4.3_Comptes_rendus_audiences_et_reunions\\Rapport de réunion - EBO 2025 Côte d\u0027Ivoire (v1 - révisé).docx"
+    },
+    {
+        "titre":  "Rapport de réunion - EBO 2025 Côte d\u0027Ivoire (v2 - enrichi)",
+        "type":  "rapport",
+        "statut":  "valide",
+        "date_finalisation":  "2026-08-18",
+        "notes":  "Fichier local : 04_RAPPORTS\\4.3_Comptes_rendus_audiences_et_reunions\\Rapport de réunion - EBO 2025 Côte d\u0027Ivoire (v2 - enrichi).docx"
+    },
+    {
+        "titre":  "Rapport de réunion - EBO 2025 Côte d\u0027Ivoire",
+        "type":  "rapport",
+        "statut":  "valide",
+        "date_finalisation":  "2026-07-21",
+        "notes":  "Fichier local : 04_RAPPORTS\\4.3_Comptes_rendus_audiences_et_reunions\\Rapport de réunion - EBO 2025 Côte d\u0027Ivoire.docx"
+    },
+    {
+        "titre":  "Rapport Première Réunion COPIL",
+        "type":  "rapport",
+        "statut":  "valide",
+        "date_finalisation":  "2026-03-07",
+        "notes":  "Fichier local : 04_RAPPORTS\\4.3_Comptes_rendus_audiences_et_reunions\\Rapport Première Réunion COPIL.docx"
+    },
+    {
+        "titre":  "MÉMORANDUM COLLAB PACT BUDGÉTAIRE",
+        "type":  "autre",
+        "statut":  "valide",
+        "date_finalisation":  "2026-05-07",
+        "notes":  "Fichier local : 06_NOTES_ET_MEMORANDUMS\\MÉMORANDUM COLLAB PACT BUDGÉTAIRE.docx"
+    },
+    {
+        "titre":  "MÉMORANDUM Collab Cour des Comptes enrichi v2",
+        "type":  "autre",
+        "statut":  "valide",
+        "date_finalisation":  "2026-07-29",
+        "notes":  "Fichier local : 06_NOTES_ET_MEMORANDUMS\\MÉMORANDUM_Collab_Cour_des_Comptes_enrichi_v2.docx"
+    },
+    {
+        "titre":  "MÉMORANDUM Collab Cour des Comptes enrichi v3",
+        "type":  "autre",
+        "statut":  "valide",
+        "date_finalisation":  "2026-07-29",
+        "notes":  "Fichier local : 06_NOTES_ET_MEMORANDUMS\\MÉMORANDUM_Collab_Cour_des_Comptes_enrichi_v3.docx"
+    },
+    {
+        "titre":  "Note cadrage AN PACT BUDGETAIRE",
+        "type":  "autre",
+        "statut":  "valide",
+        "date_finalisation":  "2026-05-29",
+        "notes":  "Fichier local : 06_NOTES_ET_MEMORANDUMS\\Note_cadrage_AN_PACT_BUDGETAIRE.docx"
+    },
+    {
+        "titre":  "Note cadrage DGBF PACT BUDGETAIRE",
+        "type":  "autre",
+        "statut":  "valide",
+        "date_finalisation":  "2026-05-22",
+        "notes":  "Fichier local : 06_NOTES_ET_MEMORANDUMS\\Note_cadrage_DGBF_PACT_BUDGETAIRE.docx"
+    },
+    {
+        "titre":  "Note Goulots Etranglement Cour des Comptes PACT Budgetaire",
+        "type":  "autre",
+        "statut":  "valide",
+        "date_finalisation":  "2026-07-08",
+        "notes":  "Fichier local : 06_NOTES_ET_MEMORANDUMS\\Note_Goulots_Etranglement_Cour_des_Comptes_PACT_Budgetaire.docx"
+    },
+    {
+        "titre":  "Note Orientation TdR DGBF BSG BudgetVert",
+        "type":  "autre",
+        "statut":  "valide",
+        "date_finalisation":  "2026-06-30",
+        "notes":  "Fichier local : 06_NOTES_ET_MEMORANDUMS\\Note_Orientation_TdR_DGBF_BSG_BudgetVert.docx"
+    },
+    {
+        "titre":  "Note Orientation TdR DGBF BSG BudgetVert v2",
+        "type":  "autre",
+        "statut":  "valide",
+        "date_finalisation":  "2026-06-30",
+        "notes":  "Fichier local : 06_NOTES_ET_MEMORANDUMS\\Note_Orientation_TdR_DGBF_BSG_BudgetVert_v2.docx"
+    },
+    {
+        "titre":  "Note Orientation TdR MFFE BSG v2",
+        "type":  "autre",
+        "statut":  "valide",
+        "date_finalisation":  "2026-06-30",
+        "notes":  "Fichier local : 06_NOTES_ET_MEMORANDUMS\\Note_Orientation_TdR_MFFE_BSG_v2.docx"
+    },
+    {
+        "titre":  "note plaidoyer budgetaire",
+        "type":  "autre",
+        "statut":  "valide",
+        "date_finalisation":  "2026-06-23",
+        "notes":  "Fichier local : 06_NOTES_ET_MEMORANDUMS\\note_plaidoyer_budgetaire.docx"
+    },
+    {
+        "titre":  "VF Note Conceptuelle COPIL",
+        "type":  "autre",
+        "statut":  "valide",
+        "date_finalisation":  "2026-01-24",
+        "notes":  "Fichier local : 06_NOTES_ET_MEMORANDUMS\\VF_Note Conceptuelle_COPIL.pdf"
+    },
+    {
+        "titre":  "Discours Mot bienvenue President SJ Atelier OGP",
+        "type":  "autre",
+        "statut":  "valide",
+        "date_finalisation":  "2026-09-25",
+        "notes":  "Fichier local : Discours_Mot_bienvenue_President_SJ_Atelier_OGP.docx"
+    },
+    {
+        "titre":  "Discours Ouverture Presidente CT OGP Atelier OGP",
+        "type":  "autre",
+        "statut":  "valide",
+        "date_finalisation":  "2026-09-25",
+        "notes":  "Fichier local : Discours_Ouverture_Presidente_CT_OGP_Atelier_OGP.docx"
+    },
+    {
+        "titre":  "Note Orientation Interventions CT OGP Atelier OGP",
+        "type":  "autre",
+        "statut":  "valide",
+        "date_finalisation":  "2026-09-25",
+        "notes":  "Fichier local : Note_Orientation_Interventions_CT_OGP_Atelier_OGP.docx"
+    }
+]

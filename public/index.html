@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suivi PACT Budgétaire</title>
+<meta name="description" content="Plateforme de suivi, d'exécution et d'évaluation du projet PACT Budgétaire — Social Justice">
+<link rel="icon" href="img/logo-social-justice.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Ecran de connexion / premiere configuration -->
+<div id="ecran-connexion" class="ecran-connexion" hidden>
+  <form id="form-connexion" class="boite-connexion">
+    <div class="logos">
+      <img src="img/logo-social-justice.png" alt="Social Justice">
+      <img src="img/logo-ue.jpeg" alt="Union européenne">
+    </div>
+    <h1>PACT Budgétaire</h1>
+    <p class="muted" style="text-align:center" id="connexion-sous-titre">Plateforme de suivi, d'exécution et d'évaluation</p>
+    <div id="connexion-setup-info" class="info" hidden>Première utilisation : créez le compte administrateur de la plateforme.</div>
+    <div id="connexion-erreur" class="erreur" hidden></div>
+    <label id="champ-nom" hidden>Nom complet <input type="text" id="connexion-nom" autocomplete="name"></label>
+    <label>E-mail <input type="email" id="connexion-email" required autocomplete="username"></label>
+    <label>Mot de passe <input type="password" id="connexion-mdp" required minlength="8" autocomplete="current-password"></label>
+    <button type="submit" id="connexion-btn">Se connecter</button>
+  </form>
+</div>
+
+<div id="coquille" class="coquille" hidden>
+  <aside class="barre" id="barre">
+    <div class="marque">
+      <img src="img/logo-social-justice.png" alt="">
+      <div><strong>PACT Budgétaire</strong><span>Suivi · Exécution · Évaluation</span></div>
+    </div>
+    <nav id="nav">
+      <div class="sep">Pilotage</div>
+      <a href="#/tableau" data-route="tableau">📊 Tableau de bord</a>
+      <a href="#/activites" data-route="activites">🗂️ Activités</a>
+      <a href="#/echeances" data-route="echeances">⏰ Échéances <span class="pastille" id="pastille-ech" hidden></span></a>
+      <a href="#/equipe" data-route="equipe">👥 Équipe & tâches</a>
+      <div class="sep">Documents</div>
+      <a href="#/documents" data-route="documents">📁 Rapports, courriers, TDR</a>
+      <a href="#/rediger" data-route="rediger">✍️ Rédiger avec l'IA</a>
+      <a href="#/modeles" data-route="modeles">🧩 Modèles</a>
+      <div class="sep">Évaluation</div>
+      <a href="#/evaluation" data-route="evaluation">🎯 Indicateurs & évaluation</a>
+      <a href="#/assistant" data-route="assistant">🤖 Assistant IA</a>
+    </nav>
+    <div class="pied-barre">
+      <div id="badge-utilisateur"></div>
+      <button class="btn-lien" id="btn-mdp">Changer mon mot de passe</button> ·
+      <button class="btn-lien" id="btn-deconnexion">Déconnexion</button>
+    </div>
+  </aside>
+  <div>
+    <div class="menu-mobile"><button id="btn-menu" aria-label="Menu">☰</button><strong>PACT Budgétaire</strong></div>
+    <main id="vue" class="vue"></main>
+  </div>
+</div>
+
+<div id="toast" class="toast" hidden></div>
+
+<script src="js/core.js"></script>
+<script src="js/vues/tableau.js"></script>
+<script src="js/vues/activites.js"></script>
+<script src="js/vues/echeances.js"></script>
+<script src="js/vues/equipe.js"></script>
+<script src="js/vues/documents.js"></script>
+<script src="js/vues/rediger.js"></script>
+<script src="js/vues/modeles.js"></script>
+<script src="js/vues/evaluation.js"></script>
+<script src="js/vues/assistant.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+# Blueprint Render : New > Blueprint > choisir ce depot GitHub.
+services:
+  - type: web
+    name: pact-budgetaire-suivi
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/auth.php?action=status
+    envVars:
+      # IA : cle gratuite Google Gemini -> https://aistudio.google.com/apikey
+      - key: AI_API_KEY
+        sync: false
+      - key: AI_PROVIDER
+        value: gemini
+      - key: AI_MODEL
+        value: gemini-2.5-flash
+      # Base PostgreSQL persistante (ex. Neon gratuit) : postgresql://user:motdepasse@hote/base?sslmode=require
+      - key: DATABASE_URL
+        sync: false
+      - key: TZ
+        value: Africa/Abidjan

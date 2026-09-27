@@ -1,0 +1,6 @@
+.git
+data
+.env
+.claude
+*.sqlite
+README.md
