@@ -31,9 +31,11 @@
     try {
       const items = await Api.get('echeances.php');
       const n = items.filter((i) => i.jours <= 7).length;
-      const p = document.getElementById('pastille-ech');
-      p.textContent = n; p.hidden = n === 0;
-      p.title = `${items.filter((i) => i.jours < 0).length} en retard, ${items.filter((i) => i.jours >= 0 && i.jours <= 7).length} dans les 7 jours`;
+      const titre = `${items.filter((i) => i.jours < 0).length} en retard, ${items.filter((i) => i.jours >= 0 && i.jours <= 7).length} dans les 7 jours`;
+      ['pastille-ech', 'pastille-mobile'].forEach((id) => {
+        const p = document.getElementById(id);
+        p.textContent = id === 'pastille-mobile' ? `🔔 ${n}` : n; p.hidden = n === 0; p.title = titre;
+      });
     } catch (e) { /* silencieux */ }
   }
   window.majPastille = majPastille;
@@ -90,6 +92,22 @@
   };
 
   document.getElementById('btn-menu').onclick = () => document.getElementById('barre').classList.toggle('ouverte');
+  document.getElementById('voile-menu').onclick = () => document.getElementById('barre').classList.remove('ouverte');
+
+  /* Sur telephone, les tableaux de donnees s'affichent en fiches : chaque cellule
+     recoit le libelle de sa colonne (data-label), lu par le CSS. */
+  function etiqueterTableaux(racine) {
+    racine.querySelectorAll('table:not(.fiches)').forEach((t) => {
+      if (t.closest('.md')) return;
+      const entetes = [...t.querySelectorAll('tr:first-child th')].map((th) => th.textContent.trim());
+      if (!entetes.length) return;
+      t.classList.add('fiches');
+      t.querySelectorAll('tr').forEach((tr) => {
+        [...tr.children].forEach((td, i) => { if (td.tagName === 'TD') td.dataset.label = entetes[i] || ''; });
+      });
+    });
+  }
+  new MutationObserver(() => etiqueterTableaux(document.body)).observe(document.body, { childList: true, subtree: true });
   window.addEventListener('hashchange', routeur);
   window.addEventListener('session-expiree', () => afficherConnexion(true));
 
