@@ -14,7 +14,7 @@ services:
       - key: AI_PROVIDER
         value: gemini
       - key: AI_MODEL
-        value: gemini-2.5-flash
+        value: gemini-3.8-flash
       # Base PostgreSQL persistante (ex. Neon gratuit) : postgresql://user:motdepasse@hote/base?sslmode=require
       - key: DATABASE_URL
         sync: false

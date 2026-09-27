@@ -32,15 +32,51 @@ class AI
         return $p === 'gemini' ? 'gemini' : 'openai';
     }
 
+    private const GEMINI_DEFAUT = 'gemini-3.8-flash';
+
+    /** Fichier memorisant le modele de remplacement quand Google retire un modele */
+    private static function fichierRemplacement(): string
+    {
+        return sys_get_temp_dir() . '/pact_gemini_modele.txt';
+    }
+
     public static function model(): string
     {
         $p = self::provider();
+        if ($p === 'gemini' && is_file(self::fichierRemplacement())) {
+            return trim(file_get_contents(self::fichierRemplacement()));
+        }
         $m = getenv('AI_MODEL') ?: '';
         // Un modele Gemini configure n'a pas de sens chez un autre fournisseur (et inversement)
         if ($m !== '' && ($p === 'gemini') === str_starts_with($m, 'gemini')) {
             return $m;
         }
-        return $p === 'gemini' ? 'gemini-2.5-flash' : (self::FOURNISSEURS[$p]['modele'] ?? 'llama-3.3-70b-versatile');
+        return $p === 'gemini' ? self::GEMINI_DEFAUT : (self::FOURNISSEURS[$p]['modele'] ?? 'llama-3.3-70b-versatile');
+    }
+
+    /**
+     * Trouve un modele Gemini utilisable quand le modele configure a ete retire :
+     * d'abord celui suggere par Google dans le message d'erreur, sinon le « flash » le plus recent.
+     */
+    private static function modeleGeminiDisponible(string $messageErreur): ?string
+    {
+        if (preg_match('#use (?:models/)?(gemini-[\w.\-]+)#i', $messageErreur, $m)) {
+            return rtrim($m[1], '.');
+        }
+        try {
+            $data = self::requete('https://generativelanguage.googleapis.com/v1beta/models?pageSize=200', null, ['x-goog-api-key: ' . self::key()]);
+        } catch (RuntimeException $e) {
+            return null;
+        }
+        $candidats = [];
+        foreach ($data['models'] ?? [] as $mod) {
+            $nom = str_replace('models/', '', $mod['name'] ?? '');
+            if (preg_match('/^gemini-(\d+(?:\.\d+)?)-flash$/', $nom, $v) && in_array('generateContent', $mod['supportedGenerationMethods'] ?? [], true)) {
+                $candidats[$nom] = (float) $v[1];
+            }
+        }
+        arsort($candidats);
+        return array_key_first($candidats);
     }
 
     private static function baseUrl(): string
@@ -95,8 +131,23 @@ class AI
             'contents' => $contents,
             'generationConfig' => ['temperature' => $temperature, 'maxOutputTokens' => $maxTokens],
         ];
-        $url = 'https://generativelanguage.googleapis.com/v1beta/models/' . rawurlencode(self::model()) . ':generateContent';
-        $data = self::post($url, $payload, ['x-goog-api-key: ' . self::key()]);
+        $appel = fn () => self::post(
+            'https://generativelanguage.googleapis.com/v1beta/models/' . rawurlencode(self::model()) . ':generateContent',
+            $payload,
+            ['x-goog-api-key: ' . self::key()]
+        );
+        try {
+            $data = $appel();
+        } catch (RuntimeException $e) {
+            // Modele retire ou inconnu : bascule automatique sur un modele disponible, une seule fois
+            $remplacant = $e->getCode() === 404 ? self::modeleGeminiDisponible($e->getMessage()) : null;
+            if (!$remplacant || $remplacant === self::model()) {
+                throw $e;
+            }
+            @file_put_contents(self::fichierRemplacement(), $remplacant);
+            error_log("[PACT] Modèle Gemini " . (getenv('AI_MODEL') ?: self::GEMINI_DEFAUT) . " indisponible, bascule sur {$remplacant}");
+            $data = $appel();
+        }
 
         $parts = $data['candidates'][0]['content']['parts'] ?? null;
         if (!$parts) {
@@ -127,15 +178,24 @@ class AI
 
     private static function post(string $url, array $payload, array $headers): array
     {
+        return self::requete($url, $payload, $headers);
+    }
+
+    /** Requete HTTP JSON (GET si $payload est null) ; le code HTTP d'erreur est porte par l'exception */
+    private static function requete(string $url, ?array $payload, array $headers): array
+    {
         $ch = curl_init($url);
-        curl_setopt_array($ch, [
+        $opts = [
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POST => true,
             CURLOPT_HTTPHEADER => array_merge(['Content-Type: application/json'], $headers),
-            CURLOPT_POSTFIELDS => json_encode($payload, JSON_UNESCAPED_UNICODE),
             CURLOPT_TIMEOUT => 120,
             CURLOPT_CONNECTTIMEOUT => 15,
-        ]);
+        ];
+        if ($payload !== null) {
+            $opts[CURLOPT_POST] = true;
+            $opts[CURLOPT_POSTFIELDS] = json_encode($payload, JSON_UNESCAPED_UNICODE);
+        }
+        curl_setopt_array($ch, $opts);
         $body = curl_exec($ch);
         $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $err = curl_error($ch);
@@ -156,7 +216,7 @@ class AI
             } elseif ($code === 403) {
                 $msg = "Accès refusé par Google : la clé n'autorise pas l'API Gemini (créez-la depuis AI Studio plutôt que depuis Google Cloud). ({$msg})";
             }
-            throw new RuntimeException("Erreur du service IA ({$code}) : {$msg}");
+            throw new RuntimeException("Erreur du service IA ({$code}) : {$msg}", $code);
         }
         return $data;
     }
