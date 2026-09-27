@@ -54,8 +54,11 @@ class Database
             parse_str($p['query'], $q);
             $sslmode = $q['sslmode'] ?? $sslmode;
         }
+        if (str_starts_with($p['host'] ?? '', 'console.')) {
+            throw new RuntimeException("DATABASE_URL pointe vers la console Neon et non vers la base : utilisez la « connection string » (hôte en ep-….neon.tech).");
+        }
         $dsn = sprintf(
-            'pgsql:host=%s;port=%d;dbname=%s;sslmode=%s',
+            'pgsql:host=%s;port=%d;dbname=%s;sslmode=%s;connect_timeout=8',
             $p['host'] ?? 'localhost',
             $p['port'] ?? 5432,
             ltrim($p['path'] ?? '', '/'),
