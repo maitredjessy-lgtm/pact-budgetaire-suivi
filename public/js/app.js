@@ -48,6 +48,7 @@
     document.getElementById('badge-utilisateur').innerHTML = `<strong style="color:#fff">${UI.esc(u.nom)}</strong><br><span>${roles[u.role] || u.role}</span>`;
     routeur();
     majPastille();
+    setTimeout(() => VueDrive.auto(), 3000);
   }
 
   function afficherConnexion(configure) {

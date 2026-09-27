@@ -285,7 +285,9 @@ const VueRediger = {
           <a class="btn btn-sec btn-sm" href="${url(f)}" target="_blank" rel="noopener">${f.mime === 'application/pdf' || f.mime.startsWith('image') ? '👁️ Ouvrir' : '⬇️ Télécharger'}</a>
           ${ecrire ? `<button class="btn-lien btn-sm" data-suppr-fichier="${f.id}" title="Retirer ce fichier">🗑️</button>` : ''}
         </div>`).join('')}
-      ${lienOk ? `<div class="item-doc"><span>🔗</span><span class="t">Lien externe</span><a class="btn btn-sec btn-sm" href="${UI.esc(doc.lien)}" target="_blank" rel="noopener">Ouvrir le lien</a></div>` : ''}
+      ${lienOk ? (doc.lien.includes('drive.google.com')
+        ? `<div class="item-doc"><span>☁️</span><span class="t">Fichier dans Google Drive</span><a class="btn btn-sec btn-sm" href="${UI.esc(doc.lien)}" target="_blank" rel="noopener">Ouvrir dans Google Drive</a></div>`
+        : `<div class="item-doc"><span>🔗</span><span class="t">Lien externe</span><a class="btn btn-sec btn-sm" href="${UI.esc(doc.lien)}" target="_blank" rel="noopener">Ouvrir le lien</a></div>`) : ''}
       ${!doc.fichiers.length && !lienOk ? `<p class="muted" style="margin:.3rem 0 0">${vide
         ? "Ce document est seulement référencé : son contenu n'est pas encore sur la plateforme. " + (ecrire ? "Joignez le fichier (Word, PDF…) : le texte d'un fichier Word sera extrait automatiquement pour être lu ici." : '')
         : 'Aucun fichier joint. Le texte ci-dessous est lisible directement.'}${doc.notes ? `<br><span style="font-size:.8rem">${UI.esc(doc.notes)}</span>` : ''}</p>` : ''}

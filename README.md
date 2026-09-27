@@ -71,6 +71,17 @@ dans `AI_API_KEY` : le site reconnaît le préfixe `gsk_` et bascule tout seul. 
 
 Pour un serveur Ollama auto-hébergé : `AI_PROVIDER=openai`, `AI_BASE_URL=http://serveur:11434/v1`, `AI_MODEL=llama3.1`.
 
+## Liaison Google Drive (lecture seule)
+
+Le site lit le dossier « PACT BUDGETAIRE - Drive de suivi » via un **compte de service Google** et ne le modifie jamais.
+
+1. Google Cloud Console : créer un projet, activer l'**API Google Drive**, créer un **compte de service**, puis une **clé JSON**.
+2. Render → Environment : `GOOGLE_SERVICE_ACCOUNT_JSON` = contenu complet du fichier JSON.
+3. Sur le site : Documents → **☁️ Google Drive** affiche l'adresse du compte de service. Partager le dossier Drive avec cette adresse (Lecteur), coller le lien du dossier, puis **Synchroniser**.
+
+Nouveaux fichiers → nouveaux documents (texte extrait, original ≤ 5 Mo joint, lien Drive). Fichiers modifiés → mis à jour,
+sauf si le texte a été retouché sur le site. Synchronisation automatique toutes les 12 h à l'ouverture du site.
+
 ## Sécurité
 
 - Mots de passe hachés (`password_hash`), sessions en cookie `HttpOnly` / `SameSite=Lax` / `Secure` en HTTPS

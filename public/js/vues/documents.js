@@ -10,7 +10,7 @@ const VueDocuments = {
     vue.innerHTML = `
       <div class="entete-vue">
         <div><h1>Rapports, courriers et TDR</h1><p class="muted">Registre des documents du projet : à produire, en cours et finalisés.</p></div>
-        <div class="actions">${UI.peutEcrire() ? '<button class="btn-sec" id="btn-ajout">+ Référencer un document</button><a class="btn btn-ia" href="#/rediger">✍️ Rédiger avec l\'IA</a>' : ''}</div>
+        <div class="actions"><button class="btn-sec" id="btn-drive">☁️ Google Drive</button>${UI.peutEcrire() ? '<button class="btn-sec" id="btn-ajout">+ Référencer un document</button><a class="btn btn-ia" href="#/rediger">✍️ Rédiger avec l\'IA</a>' : ''}</div>
       </div>
       <div class="onglets">${Object.entries(onglets).map(([k, l]) => `<button data-t="${k}" class="${k === this.type ? 'actif' : ''}">${l} (${compte(k)})</button>`).join('')}</div>
       <div class="filtres">
@@ -49,6 +49,7 @@ const VueDocuments = {
     vue.querySelectorAll('[data-t]').forEach((b) => { b.onclick = () => { this.type = b.dataset.t; this.afficher(vue); }; });
     vue.querySelector('#f-q').oninput = (e) => { this.q = e.target.value; dessiner(); };
     vue.querySelector('#f-s').onchange = (e) => { this.statut = e.target.value; dessiner(); };
+    vue.querySelector('#btn-drive').onclick = () => VueDrive.ouvrir(() => this.afficher(vue));
     vue.querySelector('#btn-ajout')?.addEventListener('click', () => this.formulaire({ type: this.type || 'rapport' }, () => this.afficher(vue)));
   },
 

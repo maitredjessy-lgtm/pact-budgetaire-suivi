@@ -103,6 +103,12 @@ CREATE TABLE IF NOT EXISTS fichiers (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Reglages persistants (dossier Google Drive, derniere synchronisation…)
+CREATE TABLE IF NOT EXISTS parametres (
+  cle TEXT PRIMARY KEY,
+  valeur TEXT
+);
+
 CREATE TABLE IF NOT EXISTS ai_log (
   id {PK},
   user_id INTEGER,

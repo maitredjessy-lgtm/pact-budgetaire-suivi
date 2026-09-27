@@ -75,7 +75,7 @@ class Database
     {
         // PostgreSQL distant : evite 15 allers-retours reseau par requete si le schema existe deja
         // (verifie la table la plus recente du schema : a mettre a jour a chaque nouvelle table)
-        if (self::$driver === 'pgsql' && self::$pdo->query("SELECT to_regclass('public.fichiers')")->fetchColumn()) {
+        if (self::$driver === 'pgsql' && self::$pdo->query("SELECT to_regclass('public.parametres')")->fetchColumn()) {
             return;
         }
         $sql = file_get_contents(__DIR__ . '/../database/schema.sql');
@@ -86,6 +86,43 @@ class Database
         foreach (array_filter(array_map('trim', explode(';', $sql))) as $stmt) {
             self::$pdo->exec($stmt);
         }
+        self::ajouterColonnes();
+    }
+
+    /** Colonnes ajoutees apres la premiere mise en production (bases deja existantes) */
+    private static function ajouterColonnes(): void
+    {
+        $colonnes = ['documents' => ['drive_id' => 'TEXT', 'drive_modifie' => 'TEXT', 'drive_empreinte' => 'TEXT']];
+        foreach ($colonnes as $table => $defs) {
+            if (self::$driver === 'pgsql') {
+                foreach ($defs as $col => $type) {
+                    self::$pdo->exec("ALTER TABLE {$table} ADD COLUMN IF NOT EXISTS {$col} {$type}");
+                }
+            } else {
+                $existantes = array_column(self::$pdo->query("PRAGMA table_info({$table})")->fetchAll(), 'name');
+                foreach ($defs as $col => $type) {
+                    if (!in_array($col, $existantes, true)) {
+                        self::$pdo->exec("ALTER TABLE {$table} ADD COLUMN {$col} {$type}");
+                    }
+                }
+            }
+        }
+        self::$pdo->exec('CREATE INDEX IF NOT EXISTS idx_documents_drive ON documents(drive_id)');
+    }
+
+    /** Petits reglages persistants (dossier Drive, date de derniere synchronisation…) */
+    public static function parametre(string $cle, ?string $defaut = null): ?string
+    {
+        $s = self::connect()->prepare('SELECT valeur FROM parametres WHERE cle = ?');
+        $s->execute([$cle]);
+        $v = $s->fetchColumn();
+        return $v === false ? $defaut : $v;
+    }
+
+    public static function definirParametre(string $cle, ?string $valeur): void
+    {
+        self::connect()->prepare('INSERT INTO parametres (cle, valeur) VALUES (?, ?) ON CONFLICT (cle) DO UPDATE SET valeur = excluded.valeur')
+            ->execute([$cle, $valeur]);
     }
 
     private static function seedIfEmpty(): void
