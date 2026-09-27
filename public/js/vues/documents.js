@@ -34,7 +34,8 @@ const VueDocuments = {
           <td style="white-space:nowrap">${['valide', 'envoye'].includes(d.statut) ? UI.date(d.date_finalisation) : `${UI.date(d.date_echeance)}<br>${UI.delai(d.date_echeance)}`}</td>
           <td>${UI.badge(d.statut, UI.STATUTS_DOC, d.en_retard)}</td>
           <td style="white-space:nowrap">
-            <a class="btn btn-sec btn-sm" href="#/editeur/${d.id}">${d.a_contenu || ['valide', 'envoye'].includes(d.statut) || !UI.peutEcrire() ? 'Ouvrir' : 'Rédiger'}</a>
+            <a class="btn ${d.a_contenu || +d.nb_fichiers ? '' : 'btn-sec'} btn-sm" href="#/editeur/${d.id}">${d.a_contenu ? '📖 Lire' : +d.nb_fichiers ? '📎 Voir le fichier' : UI.peutEcrire() && !['valide', 'envoye'].includes(d.statut) ? '✍️ Rédiger' : 'Ouvrir'}</a>
+            ${+d.nb_fichiers ? `<span title="${d.nb_fichiers} fichier(s) joint(s)">📎</span>` : ''}
             ${d.lien && /^https?:\/\//i.test(d.lien) ? `<a class="btn-lien btn-sm" href="${UI.esc(d.lien)}" target="_blank" rel="noopener" title="Ouvrir le fichier">🔗</a>` : ''}
             ${UI.peutEcrire() ? `<button class="btn-lien btn-sm" data-modif="${d.id}" title="Propriétés">⚙️</button>` : ''}
           </td></tr>`).join('')}

@@ -108,6 +108,10 @@ const VueRediger = {
           <button class="btn-sec" id="btn-pdf">🖨️ PDF</button>
         </div>
       </div>
+      <div class="bascule no-print">
+        <button data-vue="lecture">📖 Lire</button>${ecrire ? '<button data-vue="edition">✏️ Modifier</button>' : ''}
+      </div>
+      <div class="carte no-print" id="zone-fichiers"></div>
       ${ecrire ? `<div class="barre-outils no-print">
         <b style="font-size:.85rem">🤖 IA sur la sélection (ou tout le texte) :</b>
         <button class="btn-ia btn-sm" data-ia="ameliorer">Améliorer</button>
@@ -163,6 +167,22 @@ const VueRediger = {
       w.document.close();
     };
 
+    // Bascule lecture / modification : lecture par defaut des qu'il y a un contenu
+    const basculer = (mode) => {
+      vue.classList.toggle('en-lecture', mode === 'lecture');
+      vue.querySelectorAll('.bascule [data-vue]').forEach((b) => b.classList.toggle('actif', b.dataset.vue === mode));
+      rendu();
+      // En lecture, pas de page blanche quand seul le fichier original existe
+      apercu.hidden = mode === 'lecture' && !ta.value.trim() && doc.fichiers.length > 0;
+    };
+    vue.querySelectorAll('.bascule [data-vue]').forEach((b) => { b.onclick = () => basculer(b.dataset.vue); });
+    basculer(!ecrire || (doc.contenu || '').trim() || doc.fichiers.length ? 'lecture' : 'edition');
+    window.addEventListener('hashchange', () => vue.classList.remove('en-lecture'), { once: true });
+
+    this.fichiers(vue.querySelector('#zone-fichiers'), doc, ecrire, (texteExtrait) => {
+      if (texteExtrait) this.editeur(vue, id);
+    });
+
     vue.querySelectorAll('.onglets-edit [data-mode]').forEach((b) => {
       b.onclick = () => {
         vue.querySelectorAll('.onglets-edit button').forEach((x) => x.classList.toggle('actif', x === b));
@@ -208,6 +228,51 @@ const VueRediger = {
 
     window.onbeforeunload = () => (modifie ? true : undefined);
     window.addEventListener('hashchange', () => { window.onbeforeunload = null; }, { once: true });
+  },
+
+  /** Section « Fichier original » : consultation, telechargement, ajout de fichiers joints */
+  fichiers(zone, doc, ecrire, apresAjout) {
+    const url = (f) => `api/documents.php?action=fichier&fid=${f.id}`;
+    const taille = (o) => (o > 1048576 ? `${(o / 1048576).toFixed(1)} Mo` : `${Math.max(1, Math.round(o / 1024))} Ko`);
+    const icone = (m) => (m.includes('pdf') ? '📕' : m.includes('word') ? '📘' : m.includes('sheet') || m.includes('excel') ? '📗' : m.includes('presentation') ? '📙' : m.startsWith('image') ? '🖼️' : '📄');
+    const lienOk = doc.lien && /^https?:\/\//i.test(doc.lien);
+    const pdf = doc.fichiers.find((f) => f.mime === 'application/pdf');
+    const vide = !(doc.contenu || '').trim();
+    zone.innerHTML = `
+      <div class="entete-vue" style="margin-bottom:.4rem"><h3 style="margin:0">📎 Fichier original</h3>
+        ${ecrire ? `<label class="btn btn-sec btn-sm" style="margin:0">⬆️ Joindre un fichier<input type="file" id="input-fichier" hidden accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.txt,.csv"></label>` : ''}</div>
+      ${doc.fichiers.map((f) => `<div class="item-doc">
+          <span>${icone(f.mime)}</span><span class="t">${UI.esc(f.nom)} <span class="muted">— ${taille(f.taille)}</span></span>
+          <a class="btn btn-sec btn-sm" href="${url(f)}" target="_blank" rel="noopener">${f.mime === 'application/pdf' || f.mime.startsWith('image') ? '👁️ Ouvrir' : '⬇️ Télécharger'}</a>
+          ${ecrire ? `<button class="btn-lien btn-sm" data-suppr-fichier="${f.id}" title="Retirer ce fichier">🗑️</button>` : ''}
+        </div>`).join('')}
+      ${lienOk ? `<div class="item-doc"><span>🔗</span><span class="t">Lien externe</span><a class="btn btn-sec btn-sm" href="${UI.esc(doc.lien)}" target="_blank" rel="noopener">Ouvrir le lien</a></div>` : ''}
+      ${!doc.fichiers.length && !lienOk ? `<p class="muted" style="margin:.3rem 0 0">${vide
+        ? "Ce document est seulement référencé : son contenu n'est pas encore sur la plateforme. " + (ecrire ? "Joignez le fichier (Word, PDF…) : le texte d'un fichier Word sera extrait automatiquement pour être lu ici." : '')
+        : 'Aucun fichier joint. Le texte ci-dessous est lisible directement.'}${doc.notes ? `<br><span style="font-size:.8rem">${UI.esc(doc.notes)}</span>` : ''}</p>` : ''}
+      ${pdf && vide ? `<iframe src="${url(pdf)}" title="Aperçu PDF" style="width:100%;height:75vh;border:1px solid var(--bord);border-radius:8px;margin-top:.6rem"></iframe>` : ''}`;
+
+    zone.querySelector('#input-fichier')?.addEventListener('change', async (e) => {
+      const fichier = e.target.files[0];
+      if (!fichier) return;
+      if (fichier.size > 10 * 1024 * 1024) return UI.toast('Fichier trop volumineux (10 Mo maximum) : renseignez plutôt un lien Drive dans les propriétés du document.', 'erreur');
+      const fd = new FormData(); fd.append('fichier', fichier);
+      UI.toast('Envoi du fichier…');
+      try {
+        const r = await Api.post(`documents.php?action=joindre&id=${doc.id}`, fd);
+        doc.fichiers = r.fichiers;
+        UI.toast(r.texte_extrait ? 'Fichier joint — son texte est maintenant lisible sur la plateforme' : 'Fichier joint', 'ok');
+        if (r.texte_extrait) apresAjout(true); else this.fichiers(zone, doc, ecrire, apresAjout);
+      } catch (err) { UI.toast(err.message, 'erreur'); }
+    });
+    zone.querySelectorAll('[data-suppr-fichier]').forEach((b) => {
+      b.onclick = async () => {
+        if (!confirm('Retirer ce fichier du document ?')) return;
+        await Api.del(`documents.php?action=supprimer_fichier&fid=${b.dataset.supprFichier}`);
+        doc.fichiers = doc.fichiers.filter((f) => String(f.id) !== b.dataset.supprFichier);
+        this.fichiers(zone, doc, ecrire, apresAjout);
+      };
+    });
   },
 
   /** Affiche la proposition de l'IA avant de l'appliquer */

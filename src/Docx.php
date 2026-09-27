@@ -15,11 +15,20 @@ class Docx
     public static function texteDepuisDocx(string $chemin): string
     {
         $zip = new ZipArchive();
+        $copie = null;
         if ($zip->open($chemin) !== true) {
-            throw new RuntimeException('Fichier .docx illisible');
+            // Sous Windows, ZipArchive echoue sur certains noms accentues : on passe par une copie
+            $copie = tempnam(sys_get_temp_dir(), 'docx');
+            if (!copy($chemin, $copie) || $zip->open($copie) !== true) {
+                @unlink($copie);
+                throw new RuntimeException('Fichier .docx illisible');
+            }
         }
         $xml = $zip->getFromName('word/document.xml');
         $zip->close();
+        if ($copie) {
+            @unlink($copie);
+        }
         if ($xml === false) {
             throw new RuntimeException('Ce fichier ne semble pas être un document Word (.docx)');
         }
@@ -28,6 +37,7 @@ class Docx
         $dom->loadXML($xml, LIBXML_NONET | LIBXML_COMPACT);
         $xp = new DOMXPath($dom);
         $xp->registerNamespace('w', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main');
+        $xp->registerNamespace('mc', 'http://schemas.openxmlformats.org/markup-compatibility/2006');
 
         $lignes = [];
         foreach ($xp->query('//w:body/*') as $bloc) {
@@ -36,7 +46,11 @@ class Docx
                 foreach ($xp->query('.//w:tr', $bloc) as $tr) {
                     $cells = [];
                     foreach ($xp->query('./w:tc', $tr) as $tc) {
-                        $cells[] = str_replace('|', '/', trim(self::texteNoeud($xp, $tc)));
+                        $paras = [];
+                        foreach ($xp->query('.//w:p[not(ancestor::mc:Fallback)]', $tc) as $pc) {
+                            $paras[] = trim(self::texteNoeud($xp, $pc, true));
+                        }
+                        $cells[] = str_replace('|', '/', implode(' ', array_filter($paras, 'strlen')));
                     }
                     $lignes[] = '| ' . implode(' | ', $cells) . ' |';
                     if ($premiere) {
@@ -50,7 +64,15 @@ class Docx
             if ($bloc->localName !== 'p') {
                 continue;
             }
-            $texte = trim(self::texteNoeud($xp, $bloc));
+            // Zones de texte (pages de garde, encadres) : une ligne par paragraphe interne
+            foreach ($xp->query('.//w:txbxContent//w:p[not(ancestor::mc:Fallback)]', $bloc) as $pz) {
+                $tz = trim(self::texteNoeud($xp, $pz));
+                if ($tz !== '' && end($lignes) !== $tz) {
+                    $lignes[] = $tz;
+                    $lignes[] = '';
+                }
+            }
+            $texte = trim(self::texteNoeud($xp, $bloc, true));
             if ($texte === '') {
                 continue;
             }
@@ -67,10 +89,13 @@ class Docx
         return trim(preg_replace("/\n{3,}/", "\n\n", implode("\n", $lignes)));
     }
 
-    private static function texteNoeud(DOMXPath $xp, DOMNode $n): string
+    /** @param bool $horsZones exclut le texte des zones de texte (traite a part) */
+    private static function texteNoeud(DOMXPath $xp, DOMNode $n, bool $horsZones = false): string
     {
         $out = '';
-        foreach ($xp->query('.//w:t|.//w:tab|.//w:br', $n) as $t) {
+        // mc:Fallback duplique le contenu de mc:Choice (compatibilite anciennes versions de Word)
+        $filtre = '[not(ancestor::mc:Fallback)' . ($horsZones ? ' and not(ancestor::w:txbxContent)' : '') . ']';
+        foreach ($xp->query(".//w:t{$filtre}|.//w:tab{$filtre}|.//w:br{$filtre}", $n) as $t) {
             $out .= $t->localName === 't' ? $t->nodeValue : ' ';
         }
         return $out;

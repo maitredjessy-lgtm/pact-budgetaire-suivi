@@ -92,6 +92,17 @@ CREATE TABLE IF NOT EXISTS indicateurs (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Fichiers originaux joints aux documents (stockes en base : le disque Render gratuit est ephemere)
+CREATE TABLE IF NOT EXISTS fichiers (
+  id {PK},
+  document_id INTEGER NOT NULL REFERENCES documents(id) ON DELETE CASCADE,
+  nom TEXT NOT NULL,
+  mime TEXT NOT NULL,
+  taille INTEGER NOT NULL,
+  donnees TEXT NOT NULL,                         -- contenu encode en base64
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS ai_log (
   id {PK},
   user_id INTEGER,
@@ -106,3 +117,4 @@ CREATE INDEX IF NOT EXISTS idx_activites_echeance ON activites(date_echeance);
 CREATE INDEX IF NOT EXISTS idx_documents_activite ON documents(activite_id);
 CREATE INDEX IF NOT EXISTS idx_documents_echeance ON documents(date_echeance);
 CREATE INDEX IF NOT EXISTS idx_taches_activite ON taches(activite_id);
+CREATE INDEX IF NOT EXISTS idx_fichiers_document ON fichiers(document_id);

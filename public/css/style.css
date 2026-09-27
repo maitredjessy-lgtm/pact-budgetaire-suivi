@@ -168,6 +168,15 @@ tr.cliquable:hover td { background: #f8fafc; }
 .barre-outils .sepv { width: 1px; height: 22px; background: #cfd6e0; margin: 0 .2rem; }
 .onglets-edit { display: none; }
 
+/* bascule Lire / Modifier et mode lecture */
+.bascule { display: inline-flex; background: var(--gris-clair); border-radius: 10px; padding: 3px; margin-bottom: .8rem; gap: 2px; }
+.bascule button { background: none; border: none; color: var(--gris); padding: .45rem 1rem; border-radius: 8px; }
+.bascule button.actif { background: #fff; color: var(--bleu); font-weight: 600; box-shadow: var(--ombre); }
+.en-lecture .barre-outils, .en-lecture .onglets-edit, .en-lecture .zone-texte, .en-lecture #btn-save { display: none !important; }
+.en-lecture .editeur { display: block; }
+.en-lecture .apercu { display: block !important; max-width: 900px; margin: 0 auto; max-height: none; min-height: 0; padding: 2.2rem 2.8rem; box-shadow: var(--ombre); font-size: 1rem; }
+.en-lecture .apercu:empty::before, .en-lecture .apercu .muted:only-child { color: var(--gris); }
+
 /* rendu Markdown (apercu + chat) */
 .md { line-height: 1.6; font-size: .95rem; }
 .md h1 { font-size: 1.35rem; border-bottom: 2px solid var(--or); padding-bottom: .3rem; margin-top: 1rem; }
@@ -309,6 +318,9 @@ tr.cliquable:hover td { background: #f8fafc; }
   .toast { left: .75rem; right: .75rem; bottom: .75rem; max-width: none; }
   .boite-connexion { padding: 1.4rem 1.1rem; }
   .md p { text-align: left; }
+  .en-lecture .apercu { padding: 1.1rem .9rem; margin: 0 -.75rem; border-radius: 0; border-left: none; border-right: none; }
+  .bascule { display: flex; }
+  .bascule button { flex: 1; }
   .md table { font-size: .8rem; }
   .md th, .md td { padding: .35rem; }
 }

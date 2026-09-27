@@ -129,7 +129,7 @@ const VueActivites = {
             <span class="badge type">${UI.esc(UI.TYPES_DOC[d.type] || d.type)}</span>
             <span class="t">${UI.esc(d.titre)}${d.date_echeance && !['valide', 'envoye'].includes(d.statut) ? `<br><span class="muted">Échéance ${UI.date(d.date_echeance)}</span> ${UI.delai(d.date_echeance)}` : ''}</span>
             ${UI.badge(d.statut, UI.STATUTS_DOC, d.en_retard)}
-            <a class="btn btn-sec btn-sm" href="#/editeur/${d.id}">${d.a_contenu || ['valide', 'envoye'].includes(d.statut) || !ecrire ? 'Ouvrir' : 'Rédiger'}</a>
+            <a class="btn btn-sec btn-sm" href="#/editeur/${d.id}">${d.a_contenu ? '📖 Lire' : +d.nb_fichiers ? '📎 Voir' : ecrire && !['valide', 'envoye'].includes(d.statut) ? '✍️ Rédiger' : 'Ouvrir'}</a>
           </div>`).join('') : '<p class="muted">Aucun document rattaché. Utilisez la checklist standard ou les suggestions IA pour lister les documents nécessaires (TDR, courriers, rapport…).</p>'}
       </div>
 
