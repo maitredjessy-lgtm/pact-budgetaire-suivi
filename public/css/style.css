@@ -174,6 +174,12 @@ tr.cliquable:hover td { background: #f8fafc; }
 .barre-outils .sepv { width: 1px; height: 22px; background: #cfd6e0; margin: 0 .2rem; }
 .onglets-edit { display: none; }
 
+.a-completer { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
+.a-completer button { margin-left: auto; }
+.options-ia { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: .6rem; margin-bottom: .8rem; }
+.options-ia .case { display: flex; gap: .6rem; align-items: flex-start; font-weight: 400; margin: 0; padding: .7rem .8rem; border: 1px solid var(--bord); border-radius: 8px; background: #fafbff; cursor: pointer; }
+.options-ia .case input { width: auto; margin-top: .2rem; }
+
 /* bascule Lire / Modifier et mode lecture */
 .bascule { display: inline-flex; background: var(--gris-clair); border-radius: 10px; padding: 3px; margin-bottom: .8rem; gap: 2px; }
 .bascule button { background: none; border: none; color: var(--gris); padding: .45rem 1rem; border-radius: 8px; }

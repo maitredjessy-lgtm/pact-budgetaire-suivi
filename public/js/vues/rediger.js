@@ -31,6 +31,10 @@ const VueRediger = {
           <label class="plein">Instructions supplémentaires (facultatif)
             <input name="instructions" placeholder="Ex. : ton plus formel, 3 pages maximum, insister sur la participation des femmes…">
           </label>
+          <div class="plein options-ia">
+            <label class="case"><input type="checkbox" name="style" checked> <span><b>S'inspirer de nos documents</b><br><span class="muted">L'IA reprend le style de vos TDR, rapports ou courriers déjà rédigés (sans en copier les faits).</span></span></label>
+            <label class="case"><input type="checkbox" name="relecture" checked> <span><b>Relecture automatique</b><br><span class="muted">Une seconde passe vérifie le modèle, corrige le français et retire toute information inventée.</span></span></label>
+          </div>
         </div>
         <div class="actions">
           <button type="button" class="btn-sec" id="btn-vierge">Utiliser le modèle vierge</button>
@@ -56,11 +60,11 @@ const VueRediger = {
       form.querySelectorAll('[data-var]').forEach((i) => { d.variables[i.dataset.var] = i.value; });
       return d;
     };
-    const creerDocument = async (contenu, titre, d) => {
+    const creerDocument = async (contenu, titre, d, notes = null) => {
       const m = modeles.find((x) => String(x.id) === String(d.modele_id));
       const a = acts.find((x) => String(x.id) === String(d.activite_id));
       const doc = await Api.post('documents.php', {
-        type: m.type, titre, contenu, statut: 'brouillon', modele_id: m.id, activite_id: d.activite_id || null, responsable_id: a ? a.responsable_id : null,
+        type: m.type, titre, contenu, notes, statut: 'brouillon', modele_id: m.id, activite_id: d.activite_id || null, responsable_id: a ? a.responsable_id : null,
       });
       window.majPastille?.();
       location.hash = `#/editeur/${doc.id}`;
@@ -69,9 +73,17 @@ const VueRediger = {
     form.onsubmit = async (e) => {
       e.preventDefault();
       const d = lire();
-      const r = await UI.occupe(e.submitter, () => Api.ia('generer', d), "Rédaction en cours (jusqu'à 1 min)…");
-      UI.toast('Document généré — relisez-le et complétez les zones en rouge', 'ok');
-      await creerDocument(r.contenu, r.titre_suggere, d);
+      if (!d.modele_id) return UI.toast('Choisissez un modèle', 'erreur');
+      const m = modeles.find((x) => String(x.id) === d.modele_id);
+      const long = (m.contenu.match(/^##\s/gm) || []).length > 5;
+      const r = await UI.occupe(e.submitter, () => Api.ia('generer', d),
+        long ? 'Rédaction section par section (2 à 4 min)…' : `Rédaction${d.relecture ? ' et relecture' : ''} en cours (jusqu'à 2 min)…`);
+      const notes = [`Rédigé par l'IA le ${new Date().toLocaleDateString('fr-FR')} à partir du modèle « ${m.nom} »`,
+        r.references?.length ? `style inspiré de : ${r.references.map((x) => x.titre).join(' ; ')}` : '',
+        r.relu ? 'relu automatiquement' : ''].filter(Boolean).join(' — ');
+      const n = r.a_completer?.length || 0;
+      UI.toast(`Document rédigé${r.relu ? ' et relu' : ''}. ${n ? `${n} information(s) à compléter (en rouge).` : 'Relisez-le avant validation.'}`, 'ok');
+      await creerDocument(r.contenu, r.titre_suggere, d, notes);
     };
     form.querySelector('#btn-vierge').onclick = async () => {
       const d = lire();
@@ -111,6 +123,7 @@ const VueRediger = {
       <div class="bascule no-print">
         <button data-vue="lecture">📖 Lire</button>${ecrire ? '<button data-vue="edition">✏️ Modifier</button>' : ''}
       </div>
+      <div class="alerte no-print a-completer" id="a-completer" hidden></div>
       <div class="carte no-print" id="zone-fichiers"></div>
       ${ecrire ? `<div class="barre-outils no-print">
         <b style="font-size:.85rem">🤖 IA sur la sélection (ou tout le texte) :</b>
@@ -178,6 +191,32 @@ const VueRediger = {
     vue.querySelectorAll('.bascule [data-vue]').forEach((b) => { b.onclick = () => basculer(b.dataset.vue); });
     basculer(!ecrire || (doc.contenu || '').trim() || doc.fichiers.length ? 'lecture' : 'edition');
     window.addEventListener('hashchange', () => vue.classList.remove('en-lecture'), { once: true });
+
+    // Informations laissees « [À compléter] » par l'IA : compteur et navigation de l'une a l'autre
+    const RE_VIDE = /\[(?:À|A|à) (?:compléter|préciser)[^\]]*\]/g;
+    const bandeau = vue.querySelector('#a-completer');
+    const majACompleter = () => {
+      const n = (ta.value.match(RE_VIDE) || []).length;
+      bandeau.hidden = n === 0;
+      bandeau.innerHTML = `🔎 <b>${n} information${n > 1 ? 's' : ''} à compléter</b> avant de valider ce document.
+        ${ecrire ? '<button class="btn-sec btn-sm" id="btn-suivant">Aller à la suivante →</button>' : ''}`;
+      bandeau.querySelector('#btn-suivant')?.addEventListener('click', () => {
+        basculer('edition');
+        const texte = ta.value;
+        RE_VIDE.lastIndex = 0;
+        const depuis = ta.selectionEnd;
+        let m = [...texte.matchAll(RE_VIDE)].find((x) => x.index >= depuis) || [...texte.matchAll(RE_VIDE)][0];
+        if (!m) return;
+        vue.querySelectorAll('.onglets-edit [data-mode="texte"]').forEach((b) => b.click());
+        ta.focus();
+        ta.setSelectionRange(m.index, m.index + m[0].length);
+        const ligne = texte.slice(0, m.index).split('\n').length;
+        ta.scrollTop = Math.max(0, ligne * parseFloat(getComputedStyle(ta).lineHeight || '20') - ta.clientHeight / 3);
+      });
+    };
+    majACompleter();
+    let minuteur;
+    ta.addEventListener('input', () => { clearTimeout(minuteur); minuteur = setTimeout(majACompleter, 400); });
 
     this.fichiers(vue.querySelector('#zone-fichiers'), doc, ecrire, (texteExtrait) => {
       if (texteExtrait) this.editeur(vue, id);

@@ -114,26 +114,44 @@ try {
             }
             $structure = preg_replace_callback('/\{\{\s*(\w+)\s*\}\}/u', fn ($m) => $vars[$m[1]] ?? '[' . str_replace('_', ' ', $m[1]) . ']', $modele['contenu']);
 
-            $prompt = "Rédige le document complet « {$modele['nom']} » (type : {$modele['type']}).\n\n"
-                . "STRUCTURE DU MODÈLE À RESPECTER (garde tous les titres, l'ordre des sections et les tableaux ; remplace les consignes entre crochets ou en italique par du contenu rédigé) :\n"
-                . "<<<MODELE\n{$structure}\nMODELE>>>\n\n"
-                . "CONSIGNES DE RÉDACTION PROPRES À CE MODÈLE : " . ($modele['consignes'] ?: 'aucune') . "\n\n";
+            @set_time_limit(360); // redaction par sections + relecture : plusieurs appels a l'IA
+            $sources = '';
             if ($activite) {
-                $prompt .= "ACTIVITÉ CONCERNÉE :\n" . Contexte::activiteTexte($activite) . "\n\n";
+                $sources .= "ACTIVITÉ CONCERNÉE :\n" . Contexte::activiteTexte($activite) . "\n\n";
             }
             if (trim($b['infos'] ?? '') !== '') {
-                $prompt .= "INFORMATIONS FOURNIES PAR L'ÉQUIPE (source principale, à exploiter fidèlement) :\n" . trim($b['infos']) . "\n\n";
+                $sources .= "INFORMATIONS FOURNIES PAR L'ÉQUIPE (source principale, à exploiter fidèlement) :\n" . trim($b['infos']) . "\n\n";
             }
-            if (trim($b['instructions'] ?? '') !== '') {
-                $prompt .= "INSTRUCTIONS SUPPLÉMENTAIRES : " . trim($b['instructions']) . "\n\n";
-            }
-            $prompt .= "Produis uniquement le document final en Markdown, sans commentaire avant ou après.";
 
+            // 1. Documents reels de reference pour le style (sauf si l'utilisateur le desactive)
+            $refs = ($b['style'] ?? true) ? Redaction::references($pdo, $modele, $activite, AI::provider() === 'groq' ? 1 : 2) : [];
+
+            $consigne = "Rédige le document complet « {$modele['nom']} » (type : {$modele['type']}).\n\n"
+                . "CONSIGNES DE RÉDACTION PROPRES À CE MODÈLE : " . ($modele['consignes'] ?: 'aucune') . "\n\n"
+                . $sources
+                . (trim($b['instructions'] ?? '') !== '' ? "INSTRUCTIONS SUPPLÉMENTAIRES : " . trim($b['instructions']) . "\n\n" : '')
+                . Redaction::blocReferences($refs);
+
+            // 2. Redaction (par sections pour les longs documents)
             $systeme = $systemeBase . "\n=== CONTEXTE GÉNÉRAL DU PROJET ===\n" . Contexte::projet($pdo, $modele['type'] === 'rapport') . "\n=== FIN ===";
-            $texte = AI::generate($systeme, [['role' => 'user', 'content' => $prompt]], 0.5, 8192);
-            $texte = preg_replace('/^```(?:markdown)?\s*|\s*```$/u', '', trim($texte));
+            $texte = Redaction::rediger($systeme, $consigne, $structure, $modele['type']);
+
+            // 3. Relecture qualite (facultative)
+            $relu = false;
+            if ($b['relecture'] ?? true) {
+                $avant = $texte;
+                $texte = Redaction::relire($systemeBase, $texte, $structure, $modele['consignes'] ?: 'aucune', $sources ?: '(aucune information spécifique fournie)');
+                $relu = $texte !== $avant;
+            }
+
             journaliser($pdo, $user, 'generer', $modele['nom'] . ' / ' . ($activite['titre'] ?? '-'), $texte);
-            Response::json(['contenu' => $texte, 'titre_suggere' => $modele['nom'] . ($activite ? ' — ' . $activite['titre'] : '')]);
+            Response::json([
+                'contenu' => $texte,
+                'titre_suggere' => $modele['nom'] . ($activite ? ' — ' . $activite['titre'] : ''),
+                'references' => array_map(fn ($r) => ['id' => $r['id'], 'titre' => $r['titre']], $refs),
+                'relu' => $relu,
+                'a_completer' => Redaction::aCompleter($texte),
+            ]);
             // no break
 
         case 'reecrire':

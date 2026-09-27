@@ -20,7 +20,7 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-av
          echo 'Header always set Referrer-Policy "strict-origin-when-cross-origin"'; } > /etc/apache2/conf-enabled/securite.conf
 
 # Uploads de modeles .docx et reponses IA longues
-RUN { echo 'upload_max_filesize=15M'; echo 'post_max_size=16M'; echo 'max_execution_time=150'; \
+RUN { echo 'upload_max_filesize=15M'; echo 'post_max_size=16M'; echo 'max_execution_time=360'; \
       echo 'expose_php=Off'; echo 'date.timezone=Africa/Abidjan'; } > /usr/local/etc/php/conf.d/pact.ini
 
 ENV PORT=10000
