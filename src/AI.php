@@ -2,6 +2,8 @@
 /**
  * Acces aux modeles d'IA, toujours cote serveur (la cle n'est jamais envoyee au navigateur).
  *
+ * Le fournisseur est deduit du prefixe de AI_API_KEY : « AIza » Gemini, « gsk_ » Groq (Llama open source),
+ * « sk-or- » OpenRouter. Sinon :
  * AI_PROVIDER=gemini (defaut) : Google Gemini, offre gratuite (cle sur https://aistudio.google.com/apikey)
  * AI_PROVIDER=openai          : toute API compatible OpenAI, par ex. des modeles open source :
  *                               - Groq (gratuit, Llama / Mistral / Qwen)   AI_BASE_URL=https://api.groq.com/openai/v1
@@ -10,17 +12,40 @@
  */
 class AI
 {
+    /**
+     * Fournisseurs reconnus automatiquement d apres le prefixe de la cle :
+     * il suffit de coller la cle dans AI_API_KEY, sans autre reglage.
+     */
+    private const FOURNISSEURS = [
+        'groq' => ['prefixe' => 'gsk_', 'url' => 'https://api.groq.com/openai/v1', 'modele' => 'llama-3.3-70b-versatile'],
+        'openrouter' => ['prefixe' => 'sk-or-', 'url' => 'https://openrouter.ai/api/v1', 'modele' => 'meta-llama/llama-3.3-70b-instruct:free'],
+    ];
+
     public static function provider(): string
     {
-        return strtolower(getenv('AI_PROVIDER') ?: 'gemini');
+        foreach (self::FOURNISSEURS as $nom => $f) {
+            if (str_starts_with(self::key(), $f['prefixe'])) {
+                return $nom;
+            }
+        }
+        $p = strtolower(getenv('AI_PROVIDER') ?: 'gemini');
+        return $p === 'gemini' ? 'gemini' : 'openai';
     }
 
     public static function model(): string
     {
-        if (getenv('AI_MODEL')) {
-            return getenv('AI_MODEL');
+        $p = self::provider();
+        $m = getenv('AI_MODEL') ?: '';
+        // Un modele Gemini configure n'a pas de sens chez un autre fournisseur (et inversement)
+        if ($m !== '' && ($p === 'gemini') === str_starts_with($m, 'gemini')) {
+            return $m;
         }
-        return self::provider() === 'gemini' ? 'gemini-2.5-flash' : 'llama-3.3-70b-versatile';
+        return $p === 'gemini' ? 'gemini-2.5-flash' : (self::FOURNISSEURS[$p]['modele'] ?? 'llama-3.3-70b-versatile');
+    }
+
+    private static function baseUrl(): string
+    {
+        return rtrim(self::FOURNISSEURS[self::provider()]['url'] ?? (getenv('AI_BASE_URL') ?: 'https://api.groq.com/openai/v1'), '/');
     }
 
     private static function key(): string
@@ -42,14 +67,14 @@ class AI
     private static function verifierFormatCle(): void
     {
         if (self::provider() === 'gemini' && self::key() !== '' && !str_starts_with(self::key(), 'AIza')) {
-            throw new RuntimeException("La valeur de AI_API_KEY dans Render n'est pas une clé Gemini (une clé Gemini commence par « AIza » et fait 39 caractères). Recopiez la clé depuis https://aistudio.google.com/apikey.");
+            throw new RuntimeException("La valeur de AI_API_KEY dans Render n'est pas une clé reconnue. Clés acceptées : Gemini (commence par « AIza »), Groq (« gsk_ ») ou OpenRouter (« sk-or- »).");
         }
     }
 
     public static function isConfigured(): bool
     {
         // Un serveur Ollama local peut fonctionner sans cle
-        return self::key() !== '' || (self::provider() === 'openai' && getenv('AI_BASE_URL'));
+        return self::key() !== '' || (self::provider() === 'openai' && (bool) getenv('AI_BASE_URL'));
     }
 
     /**
@@ -62,7 +87,7 @@ class AI
             throw new RuntimeException("L'IA n'est pas configurée : ajoutez la variable d'environnement AI_API_KEY (clé Gemini gratuite sur https://aistudio.google.com/apikey).");
         }
         self::verifierFormatCle();
-        return self::provider() === 'openai'
+        return self::provider() !== 'gemini'
             ? self::openai($system, $messages, $temperature, $maxTokens)
             : self::gemini($system, $messages, $temperature, $maxTokens);
     }
@@ -92,12 +117,13 @@ class AI
 
     private static function openai(string $system, array $messages, float $temperature, int $maxTokens): string
     {
-        $base = rtrim(getenv('AI_BASE_URL') ?: 'https://api.groq.com/openai/v1', '/');
+        $base = self::baseUrl();
         $payload = [
             'model' => self::model(),
             'messages' => array_merge([['role' => 'system', 'content' => $system]], $messages),
             'temperature' => $temperature,
-            'max_tokens' => $maxTokens,
+            // Offre gratuite Groq : environ 12 000 jetons par minute, requete + reponse comprises
+            'max_tokens' => self::provider() === 'groq' ? min($maxTokens, 5000) : $maxTokens,
         ];
         $headers = self::key() !== '' ? ['Authorization: Bearer ' . self::key()] : [];
         $data = self::post($base . '/chat/completions', $payload, $headers);
@@ -132,8 +158,8 @@ class AI
             $msg = $data['error']['message'] ?? substr($body, 0, 300);
             if ($code === 429) {
                 $msg = "Quota gratuit momentanément atteint, réessayez dans une minute. ({$msg})";
-            } elseif (stripos($msg, 'API key not valid') !== false || stripos($msg, 'API_KEY_INVALID') !== false) {
-                $msg = "Google refuse la clé AI_API_KEY enregistrée dans Render (clé invalide, supprimée ou mal copiée). Créez une nouvelle clé sur https://aistudio.google.com/apikey et remplacez la valeur dans Render > Environment.";
+            } elseif (stripos($msg, 'API key not valid') !== false || stripos($msg, 'API_KEY_INVALID') !== false || $code === 401) {
+                $msg = "Le fournisseur d'IA refuse la clé AI_API_KEY enregistrée dans Render (clé invalide, supprimée ou mal copiée). Créez une nouvelle clé (Gemini : https://aistudio.google.com/apikey — Groq : https://console.groq.com/keys) et remplacez la valeur dans Render > Environment.";
             } elseif ($code === 403) {
                 $msg = "Accès refusé par Google : la clé n'autorise pas l'API Gemini (créez-la depuis AI Studio plutôt que depuis Google Cloud). ({$msg})";
             }

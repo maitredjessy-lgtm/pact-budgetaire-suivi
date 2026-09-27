@@ -65,14 +65,11 @@ Pour activer l'IA en local : `set AI_API_KEY=votre_cle` (Windows) avant la comma
 
 ### Utiliser un modèle open source au lieu de Gemini
 
-Dans Render → *Environment* :
+Il suffit de coller une clé **Groq** (gratuite, modèle open source Llama 3.3 70B : https://console.groq.com/keys)
+dans `AI_API_KEY` : le site reconnaît le préfixe `gsk_` et bascule tout seul. Même chose pour une clé
+**OpenRouter** (`sk-or-…`). Le bouton *🩺 Tester la connexion IA* (Assistant IA, administrateur) vérifie la configuration.
 
-```
-AI_PROVIDER=openai
-AI_BASE_URL=https://api.groq.com/openai/v1
-AI_MODEL=llama-3.3-70b-versatile
-AI_API_KEY=<clé Groq gratuite : https://console.groq.com/keys>
-```
+Pour un serveur Ollama auto-hébergé : `AI_PROVIDER=openai`, `AI_BASE_URL=http://serveur:11434/v1`, `AI_MODEL=llama3.1`.
 
 ## Sécurité
 
