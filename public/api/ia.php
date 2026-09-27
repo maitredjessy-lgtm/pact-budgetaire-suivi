@@ -13,6 +13,18 @@ $user = Auth::require();
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     Response::error('Méthode non supportée', 405);
 }
+
+// Diagnostic de la configuration IA (administrateurs) : ne revele jamais la cle complete
+if (($_GET['action'] ?? '') === 'test') {
+    Auth::requireAdmin();
+    $infos = ['fournisseur' => AI::provider(), 'modele' => AI::model(), 'cle' => AI::apercuCle()];
+    try {
+        $r = AI::generate('Réponds uniquement par le mot OK.', [['role' => 'user', 'content' => 'Test de connexion']], 0, 1024);
+        Response::json($infos + ['ok' => true, 'message' => 'Connexion à l\'IA réussie (réponse : ' . mb_substr($r, 0, 30) . ')']);
+    } catch (RuntimeException $e) {
+        Response::json($infos + ['ok' => false, 'message' => $e->getMessage()]);
+    }
+}
 if (!AI::isConfigured()) {
     Response::error("L'assistant IA n'est pas encore configuré. Un administrateur doit ajouter la variable d'environnement AI_API_KEY (clé gratuite Google Gemini : https://aistudio.google.com/apikey) dans les paramètres du service Render.", 503);
 }

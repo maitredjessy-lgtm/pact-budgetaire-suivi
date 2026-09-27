@@ -25,7 +25,25 @@ class AI
 
     private static function key(): string
     {
-        return getenv('AI_API_KEY') ?: (getenv('GEMINI_API_KEY') ?: '');
+        $cle = getenv('AI_API_KEY') ?: (getenv('GEMINI_API_KEY') ?: '');
+        // Erreurs de copier-coller frequentes : espaces, retours a la ligne, guillemets, "AI_API_KEY=" colle avec
+        $cle = trim(preg_replace('/^\s*(AI_API_KEY|GEMINI_API_KEY)\s*=\s*/i', '', $cle), " \t\n\r\0\x0B\"'");
+        return $cle;
+    }
+
+    /** Apercu non sensible de la cle pour le diagnostic : 4 premiers caracteres + longueur */
+    public static function apercuCle(): string
+    {
+        $k = self::key();
+        return $k === '' ? '(vide)' : substr($k, 0, 4) . '… (' . strlen($k) . ' caractères)';
+    }
+
+    /** Diagnostic lisible si la cle n'a manifestement pas le bon format */
+    private static function verifierFormatCle(): void
+    {
+        if (self::provider() === 'gemini' && self::key() !== '' && !str_starts_with(self::key(), 'AIza')) {
+            throw new RuntimeException("La valeur de AI_API_KEY dans Render n'est pas une clé Gemini (une clé Gemini commence par « AIza » et fait 39 caractères). Recopiez la clé depuis https://aistudio.google.com/apikey.");
+        }
     }
 
     public static function isConfigured(): bool
@@ -43,6 +61,7 @@ class AI
         if (!self::isConfigured()) {
             throw new RuntimeException("L'IA n'est pas configurée : ajoutez la variable d'environnement AI_API_KEY (clé Gemini gratuite sur https://aistudio.google.com/apikey).");
         }
+        self::verifierFormatCle();
         return self::provider() === 'openai'
             ? self::openai($system, $messages, $temperature, $maxTokens)
             : self::gemini($system, $messages, $temperature, $maxTokens);
@@ -113,6 +132,10 @@ class AI
             $msg = $data['error']['message'] ?? substr($body, 0, 300);
             if ($code === 429) {
                 $msg = "Quota gratuit momentanément atteint, réessayez dans une minute. ({$msg})";
+            } elseif (stripos($msg, 'API key not valid') !== false || stripos($msg, 'API_KEY_INVALID') !== false) {
+                $msg = "Google refuse la clé AI_API_KEY enregistrée dans Render (clé invalide, supprimée ou mal copiée). Créez une nouvelle clé sur https://aistudio.google.com/apikey et remplacez la valeur dans Render > Environment.";
+            } elseif ($code === 403) {
+                $msg = "Accès refusé par Google : la clé n'autorise pas l'API Gemini (créez-la depuis AI Studio plutôt que depuis Google Cloud). ({$msg})";
             }
             throw new RuntimeException("Erreur du service IA ({$code}) : {$msg}");
         }

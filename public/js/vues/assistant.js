@@ -14,7 +14,8 @@ const VueAssistant = {
       <div class="entete-vue"><div><h1>🤖 Assistant IA du projet</h1>
         <p class="muted">Posez vos questions sur l'avancement, les échéances, les responsables ou demandez de l'aide pour préparer une activité. L'assistant connaît les données actuelles de la plateforme.
         ${Etat.config.ia_modele ? `<br>Modèle : ${UI.esc(Etat.config.ia_modele)}` : ''}</p></div>
-        <div class="actions"><button class="btn-sec btn-sm" id="btn-vider">Nouvelle conversation</button></div></div>
+        <div class="actions">${Etat.user.role === 'admin' ? '<button class="btn-sec btn-sm" id="btn-test-ia">🩺 Tester la connexion IA</button>' : ''}<button class="btn-sec btn-sm" id="btn-vider">Nouvelle conversation</button></div></div>
+      <div id="resultat-test-ia"></div>
       ${Etat.config.ia ? '' : '<div class="alerte">L\'IA n\'est pas configurée : un administrateur doit définir la variable AI_API_KEY sur le serveur (voir README).</div>'}
       <div class="carte chat">
         <div class="fil" id="fil"></div>
@@ -69,5 +70,11 @@ const VueAssistant = {
     q.onkeydown = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); } };
     vue.querySelectorAll('#sugg button').forEach((b) => { b.onclick = () => envoyer(b.textContent); });
     vue.querySelector('#btn-vider').onclick = () => { this.messages = []; dessiner(); };
+    vue.querySelector('#btn-test-ia')?.addEventListener('click', async (e) => {
+      const r = await UI.occupe(e.currentTarget, () => Api.ia('test', {}), 'Test…');
+      vue.querySelector('#resultat-test-ia').innerHTML = `<div class="${r.ok ? 'info' : 'erreur'}">
+        <b>${r.ok ? '✅' : '❌'} ${UI.esc(r.message)}</b><br>
+        <span style="font-size:.85rem">Fournisseur : ${UI.esc(r.fournisseur)} · Modèle : ${UI.esc(r.modele)} · Clé enregistrée : ${UI.esc(r.cle)}</span></div>`;
+    });
   },
 };
