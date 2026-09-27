@@ -66,11 +66,17 @@ class Database
         );
         $pdo = new PDO($dsn, urldecode($p['user'] ?? ''), urldecode($p['pass'] ?? ''));
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        // Requetes preparees cote PHP : indispensable derriere un pooler PgBouncer (Neon "-pooler", Supabase)
+        $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
         return $pdo;
     }
 
     private static function migrate(): void
     {
+        // PostgreSQL distant : evite 15 allers-retours reseau par requete si le schema existe deja
+        if (self::$driver === 'pgsql' && self::$pdo->query("SELECT to_regclass('public.ai_log')")->fetchColumn()) {
+            return;
+        }
         $sql = file_get_contents(__DIR__ . '/../database/schema.sql');
         $pk = self::$driver === 'pgsql' ? 'SERIAL PRIMARY KEY' : 'INTEGER PRIMARY KEY AUTOINCREMENT';
         $sql = str_replace('{PK}', $pk, $sql);
