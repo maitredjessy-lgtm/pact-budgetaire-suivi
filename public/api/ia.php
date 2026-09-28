@@ -67,9 +67,18 @@ try {
             if (!$messages || end($messages)['role'] !== 'user') {
                 Response::error('Message requis', 422);
             }
+            // Recherche dans le texte des documents a partir de la question (et de la precedente, pour les relances)
+            $questions = array_column(array_filter($messages, fn ($m) => $m['role'] === 'user'), 'content');
+            $extraits = Contexte::documentsPertinents($pdo, implode(' ', array_slice($questions, -2)));
+
             $systeme = $systemeBase
                 . "Tu aides l'équipe à piloter le projet : état d'avancement, retards, priorités, personnes responsables, documents à produire, préparation des activités. "
-                . "Sois concis et actionnable. Cite les codes d'activités.\n\n=== DONNÉES ACTUELLES DU PROJET ===\n" . Contexte::projet($pdo) . "\n=== FIN ===";
+                . "Sois concis et actionnable. Cite les codes d'activités.\n"
+                . "- Pour les faits (dates, lieux, participants, décisions…), appuie-toi d'abord sur les EXTRAITS DE DOCUMENTS ci-dessous et cite le document utilisé (« d'après le courrier … »).\n"
+                . "- IMPORTANT : tu ne peux RIEN modifier dans la plateforme (ni statut, ni date, ni document). Ne dis jamais qu'une modification est « prise en compte » ou « enregistrée ». "
+                . "Si l'utilisateur t'informe d'un changement, remercie-le et indique précisément où le faire lui-même (ex. « Activités → cliquez sur l'activité → Modifier → Statut : Terminé »).\n"
+                . "\n=== DONNÉES ACTUELLES DU PROJET ===\n" . Contexte::projet($pdo) . "\n=== FIN ===\n"
+                . ($extraits !== '' ? "\n=== EXTRAITS DE DOCUMENTS DU PROJET (recherche automatique) ===\n{$extraits}\n=== FIN DES EXTRAITS ===" : '');
             $reponse = AI::generate($systeme, $messages, 0.4, 4096);
             journaliser($pdo, $user, 'chat', end($messages)['content'], $reponse);
             Response::json(['reponse' => $reponse]);

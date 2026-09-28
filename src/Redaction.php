@@ -76,7 +76,7 @@ class Redaction
         return $refs;
     }
 
-    private static function mots(string $texte): array
+    public static function mots(string $texte): array
     {
         $mots = preg_split('/[^\p{L}\p{N}]+/u', mb_strtolower($texte), -1, PREG_SPLIT_NO_EMPTY);
         return array_values(array_unique(array_filter($mots, fn ($m) => mb_strlen($m) > 3 && !in_array($m, self::MOTS_VIDES, true))));

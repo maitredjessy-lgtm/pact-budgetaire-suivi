@@ -57,6 +57,79 @@ class Contexte
         return implode("\n", $l);
     }
 
+    /**
+     * Recherche dans le TEXTE des documents du projet les passages utiles pour repondre a une question
+     * (ex. « quel hôtel pour le lancement ? » -> courrier d'invitation qui mentionne l'hôtel Azalaï).
+     */
+    public static function documentsPertinents(PDO $pdo, string $question, int $max = 4): string
+    {
+        $vides = ['peux', 'peut', 'pouvez', 'quel', 'quelle', 'quels', 'quelles', 'quand', 'comment', 'pourquoi', 'combien', 'etait', 'était', 'sont',
+            'cette', 'avoir', 'faire', 'fait', 'préciser', 'preciser', 'précise', 'donner', 'donne', 'dire', 'merci', 'stp', 'svp', 'moi', 'nous', 'vous', 'ont', 'eu', 'lieu'];
+        $mots = array_slice(array_values(array_filter(
+            array_map([self::class, 'sansAccents'], Redaction::mots($question)),
+            fn ($m) => !in_array($m, $vides, true)
+        )), 0, 8);
+        if (!$mots) {
+            return '';
+        }
+        $like = Database::like();
+        $conditions = implode(' OR ', array_fill(0, count($mots), "(titre {$like} ? OR contenu {$like} ?)"));
+        $params = [];
+        foreach ($mots as $m) {
+            // Voyelles remplacees par « _ » (un caractere quelconque) : « hotel » trouve aussi « hôtel »
+            $motif = '%' . preg_replace('/[aeiouyc]/', '_', $m) . '%';
+            array_push($params, $motif, $motif);
+        }
+        $s = $pdo->prepare("SELECT id, type, titre, contenu FROM documents WHERE contenu IS NOT NULL AND contenu <> '' AND ({$conditions}) LIMIT 60");
+        $s->execute($params);
+
+        $resultats = [];
+        foreach ($s->fetchAll() as $d) {
+            $texte = self::sansAccents($d['contenu']);
+            $titre = self::sansAccents($d['titre']);
+            $score = 0;
+            $positions = [];
+            foreach ($mots as $m) {
+                $n = mb_substr_count($texte, $m);
+                $score += min($n, 5) + (str_contains($titre, $m) ? 4 : 0) + ($n > 0 ? 3 : 0); // favorise les documents qui couvrent plusieurs mots
+                if (($p = mb_strpos($texte, $m)) !== false) {
+                    $positions[] = $p;
+                }
+            }
+            $resultats[] = ['score' => $score, 'doc' => $d, 'positions' => $positions];
+        }
+        usort($resultats, fn ($a, $b) => $b['score'] <=> $a['score']);
+
+        $out = [];
+        foreach (array_slice($resultats, 0, $max) as $r) {
+            $d = $r['doc'];
+            // Extraits autour des mots trouves (+ debut du document, souvent le plus informatif)
+            $extraits = [mb_substr($d['contenu'], 0, 700)];
+            sort($r['positions']);
+            $dernier = 700;
+            foreach ($r['positions'] as $p) {
+                if ($p > $dernier) {
+                    $extraits[] = '… ' . mb_substr($d['contenu'], max(0, $p - 350), 800) . ' …';
+                    $dernier = $p + 450;
+                }
+                if (count($extraits) >= 4) {
+                    break;
+                }
+            }
+            $out[] = "--- Document « {$d['titre']} » ({$d['type']}) ---\n" . implode("\n", $extraits);
+        }
+        return implode("\n\n", $out);
+    }
+
+    /** Minuscules sans accents, en conservant la longueur (les positions restent valables dans le texte d'origine) */
+    public static function sansAccents(string $s): string
+    {
+        return strtr(mb_strtolower($s), [
+            'à' => 'a', 'â' => 'a', 'ä' => 'a', 'é' => 'e', 'è' => 'e', 'ê' => 'e', 'ë' => 'e', 'î' => 'i', 'ï' => 'i',
+            'ô' => 'o', 'ö' => 'o', 'ù' => 'u', 'û' => 'u', 'ü' => 'u', 'ç' => 'c', 'ÿ' => 'y', 'œ' => 'o',
+        ]);
+    }
+
     public static function activite(PDO $pdo, int $id): ?array
     {
         $stmt = $pdo->prepare('SELECT a.*, r.nom AS responsable_nom FROM activites a LEFT JOIN responsables r ON r.id = a.responsable_id WHERE a.id = ?');
