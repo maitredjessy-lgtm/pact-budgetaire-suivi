@@ -12,7 +12,11 @@ const VueFinances = {
   STATUTS: { engagee: 'Engagée', payee: 'Payée', justifiee: 'Justifiée' },
   PARTENAIRES: { SJ: 'Social Justice', IBP: 'IBP Sénégal' },
 
-  async afficher(vue) {
+  async afficher(vue, params = []) {
+    // Lien direct vers un onglet : #/finances/budget, #/finances/depenses…
+    if (params[0] && typeof this[params[0]] === 'function' && ['synthese', 'budget', 'depenses', 'financements', 'rapports'].includes(params[0])) {
+      this.onglet = params[0];
+    }
     const admin = Etat.user.role === 'admin';
     vue.innerHTML = `
       <div class="entete-vue">
@@ -27,7 +31,7 @@ const VueFinances = {
           .map(([k, l]) => `<button data-o="${k}" class="${k === this.onglet ? 'actif' : ''}">${l}</button>`).join('')}
       </div>
       <div id="contenu-fin"><div class="chargement"><span class="spinner fonce"></span></div></div>`;
-    vue.querySelectorAll('[data-o]').forEach((b) => { b.onclick = () => { this.onglet = b.dataset.o; this.afficher(vue); }; });
+    vue.querySelectorAll('[data-o]').forEach((b) => { b.onclick = () => { this.onglet = b.dataset.o; history.replaceState(null, '', `#/finances/${b.dataset.o}`); this.afficher(vue); }; });
     vue.querySelector('#btn-depense')?.addEventListener('click', () => this.formDepense({}, () => this.afficher(vue)));
     vue.querySelector('#btn-import')?.addEventListener('click', () => this.importer(vue));
     const zone = vue.querySelector('#contenu-fin');

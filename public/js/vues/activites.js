@@ -1,8 +1,10 @@
 const VueActivites = {
   filtres: { q: '', statut: '', composante: '', responsable_id: '' },
 
-  async afficher(vue) {
+  async afficher(vue, params = []) {
     const [acts, resp] = await Promise.all([Api.get('activites.php'), reference('responsables')]);
+    // Lien direct vers la fiche d'une activite : #/activites/23
+    if (params[0]) setTimeout(() => this.ouvrir(+params[0]), 0);
     Etat.cache.activites = acts;
     const composantes = [...new Set(acts.map((a) => a.composante).filter(Boolean))].sort();
     const f = this.filtres;
