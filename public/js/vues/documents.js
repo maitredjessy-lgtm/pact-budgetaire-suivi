@@ -25,22 +25,26 @@ const VueDocuments = {
         && (!this.statut || (this.statut === 'ouverts' ? !['valide', 'envoye'].includes(d.statut) : d.statut === this.statut))
         && (!q || `${d.titre} ${d.activite_titre || ''} ${d.notes || ''}`.toLowerCase().includes(q)));
       vue.querySelector('#liste').innerHTML = l.length ? `<table>
-        <tr><th>Document</th><th class="masquer-mobile">Activité</th><th>Responsable</th><th>Échéance / finalisé</th><th>Statut</th><th></th></tr>
-        ${l.map((d) => `<tr>
-          <td><span class="badge type">${UI.esc(UI.TYPES_DOC[d.type] || d.type)}</span> <b>${UI.esc(d.titre)}</b>
-            ${d.notes ? `<br><span class="muted" style="font-size:.8rem">${UI.esc(d.notes.slice(0, 140))}</span>` : ''}</td>
+        <tr><th>Document</th><th class="masquer-mobile">Activité</th><th class="masquer-etroit">Responsable</th><th>Échéance / finalisé</th><th>Statut</th><th></th></tr>
+        ${l.map((d) => `<tr class="cliquable" data-ouvrir="${d.id}">
+          <td class="col-doc"><span class="badge type">${UI.esc(UI.TYPES_DOC[d.type] || d.type)}</span> <a class="titre-doc" href="#/editeur/${d.id}">${UI.esc(d.titre)}</a>
+            ${d.notes ? `<br><span class="muted chemin">${UI.esc(d.notes.slice(0, 140))}</span>` : ''}
+            <div style="margin-top:.35rem"><a class="btn ${d.a_contenu || +d.nb_fichiers ? '' : 'btn-sec'} btn-sm" href="#/editeur/${d.id}">${d.a_contenu ? '📖 Lire' : +d.nb_fichiers ? '📎 Voir le fichier' : UI.peutEcrire() && !['valide', 'envoye'].includes(d.statut) ? '✍️ Rédiger' : 'Ouvrir'}</a></div></td>
           <td class="masquer-mobile">${d.activite_titre ? `<a href="javascript:void(0)" data-act="${d.activite_id}">${d.activite_code ? UI.esc(d.activite_code) + ' — ' : ''}${UI.esc(d.activite_titre)}</a>` : '—'}</td>
-          <td>${UI.esc(d.responsable_nom || '—')}</td>
+          <td class="masquer-etroit">${UI.esc(d.responsable_nom || '—')}</td>
           <td style="white-space:nowrap">${['valide', 'envoye'].includes(d.statut) ? UI.date(d.date_finalisation) : `${UI.date(d.date_echeance)}<br>${UI.delai(d.date_echeance)}`}</td>
           <td>${UI.badge(d.statut, UI.STATUTS_DOC, d.en_retard)}</td>
           <td style="white-space:nowrap">
-            <a class="btn ${d.a_contenu || +d.nb_fichiers ? '' : 'btn-sec'} btn-sm" href="#/editeur/${d.id}">${d.a_contenu ? '📖 Lire' : +d.nb_fichiers ? '📎 Voir le fichier' : UI.peutEcrire() && !['valide', 'envoye'].includes(d.statut) ? '✍️ Rédiger' : 'Ouvrir'}</a>
             ${+d.nb_fichiers ? `<span title="${d.nb_fichiers} fichier(s) joint(s)">📎</span>` : ''}
             ${d.lien && /^https?:\/\//i.test(d.lien) ? `<a class="btn-lien btn-sm" href="${UI.esc(d.lien)}" target="_blank" rel="noopener" title="Ouvrir le fichier">🔗</a>` : ''}
             ${UI.peutEcrire() ? `<button class="btn-lien btn-sm" data-modif="${d.id}" title="Propriétés">⚙️</button>` : ''}
           </td></tr>`).join('')}
       </table>` : '<p class="vide-etat">Aucun document.</p>';
-      vue.querySelectorAll('[data-act]').forEach((a) => { a.onclick = () => VueActivites.ouvrir(+a.dataset.act); });
+      vue.querySelectorAll('[data-act]').forEach((a) => { a.onclick = (e) => { e.stopPropagation(); VueActivites.ouvrir(+a.dataset.act); }; });
+      // Un clic n'importe ou sur la ligne ouvre le document (sauf sur les liens et boutons eux-memes)
+      vue.querySelectorAll('tr[data-ouvrir]').forEach((tr) => {
+        tr.onclick = (e) => { if (!e.target.closest('a, button')) location.hash = `#/editeur/${tr.dataset.ouvrir}`; };
+      });
       vue.querySelectorAll('[data-modif]').forEach((b) => {
         b.onclick = async () => this.formulaire(await Api.get('documents.php', { id: b.dataset.modif }), () => this.afficher(vue));
       });

@@ -236,6 +236,12 @@ tr.cliquable:hover td { background: #f8fafc; }
 .chiffres b { color: var(--texte); font-size: 1rem; display: block; }
 
 .voile-menu { display: none; }
+/* liste des documents : titre cliquable, chemins longs coupes pour que le bouton « Lire » reste visible */
+.col-doc { min-width: 220px; }
+.titre-doc { font-weight: 700; color: var(--bleu); text-decoration: none; }
+.titre-doc:hover { text-decoration: underline; }
+.muted.chemin { font-size: .78rem; overflow-wrap: anywhere; word-break: break-word; }
+@media (max-width: 1200px) and (min-width: 901px) { .masquer-etroit { display: none; } }
 .carte-modele, .item-doc, .ech .corps, .panneau { overflow-wrap: anywhere; min-width: 0; }
 
 /* ---------- tablette : editeur et colonnes empilees */
