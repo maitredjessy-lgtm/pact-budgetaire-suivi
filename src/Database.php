@@ -75,7 +75,7 @@ class Database
     {
         // PostgreSQL distant : evite 15 allers-retours reseau par requete si le schema existe deja
         // (verifie la table la plus recente du schema : a mettre a jour a chaque nouvelle table)
-        if (self::$driver === 'pgsql' && self::$pdo->query("SELECT to_regclass('public.parametres')")->fetchColumn()) {
+        if (self::$driver === 'pgsql' && self::$pdo->query("SELECT to_regclass('public.financements')")->fetchColumn()) {
             return;
         }
         $sql = file_get_contents(__DIR__ . '/../database/schema.sql');

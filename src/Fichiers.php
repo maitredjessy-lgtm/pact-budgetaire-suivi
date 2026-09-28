@@ -19,6 +19,11 @@ class Fichiers
         'txt' => 'text/plain', 'csv' => 'text/csv',
     ];
 
+    public static function mime(string $nom): string
+    {
+        return self::MIMES[strtolower(pathinfo($nom, PATHINFO_EXTENSION))] ?? 'application/octet-stream';
+    }
+
     public static function extensionAutorisee(string $nom): bool
     {
         return isset(self::MIMES[strtolower(pathinfo($nom, PATHINFO_EXTENSION))]);

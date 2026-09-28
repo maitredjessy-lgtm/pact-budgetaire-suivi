@@ -10,6 +10,7 @@
     editeur: VueRediger,
     modeles: VueModeles,
     evaluation: VueEvaluation,
+    finances: VueFinances,
     assistant: VueAssistant,
   };
 

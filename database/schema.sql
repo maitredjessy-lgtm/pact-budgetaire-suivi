@@ -103,6 +103,68 @@ CREATE TABLE IF NOT EXISTS fichiers (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- ===== Suivi financier =====
+-- Lignes du budget UE (Annexe III), montants en EUR
+CREATE TABLE IF NOT EXISTS budget_lignes (
+  id {PK},
+  cle TEXT UNIQUE NOT NULL,                      -- identifiant stable pour les reimports
+  rubrique TEXT NOT NULL,                        -- 1 a 6 (couts directs), 8 (couts indirects)
+  rubrique_libelle TEXT,
+  groupe TEXT,                                   -- sous-section (ex. « 1.1.1.2 Atelier de presentation… »)
+  code TEXT,
+  libelle TEXT NOT NULL,
+  unite TEXT,
+  quantite REAL,
+  cout_unitaire REAL,
+  montant REAL NOT NULL DEFAULT 0,               -- total 3 ans
+  montant_a1 REAL NOT NULL DEFAULT 0,
+  montant_a2 REAL NOT NULL DEFAULT 0,
+  montant_a3 REAL NOT NULL DEFAULT 0,
+  partenaire TEXT,                               -- IBP | SJ
+  activite_id INTEGER REFERENCES activites(id) ON DELETE SET NULL,
+  ordre INTEGER NOT NULL DEFAULT 0,
+  obsolete INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS depenses (
+  id {PK},
+  ligne_id INTEGER REFERENCES budget_lignes(id) ON DELETE SET NULL,
+  activite_id INTEGER REFERENCES activites(id) ON DELETE SET NULL,
+  date_depense TEXT NOT NULL,
+  libelle TEXT NOT NULL,
+  montant_eur REAL NOT NULL,
+  montant_fcfa REAL,
+  fournisseur TEXT,
+  piece TEXT,                                    -- n° de piece comptable / facture
+  mode_paiement TEXT,
+  statut TEXT NOT NULL DEFAULT 'payee',          -- engagee | payee | justifiee
+  partenaire TEXT,
+  notes TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS pieces_justificatives (
+  id {PK},
+  depense_id INTEGER NOT NULL REFERENCES depenses(id) ON DELETE CASCADE,
+  nom TEXT NOT NULL,
+  mime TEXT NOT NULL,
+  taille INTEGER NOT NULL,
+  donnees TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Fonds recus (tranches UE, Hewlett…)
+CREATE TABLE IF NOT EXISTS financements (
+  id {PK},
+  date_reception TEXT NOT NULL,
+  source TEXT NOT NULL,
+  libelle TEXT,
+  montant_eur REAL NOT NULL,
+  notes TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Reglages persistants (dossier Google Drive, derniere synchronisation…)
 CREATE TABLE IF NOT EXISTS parametres (
   cle TEXT PRIMARY KEY,
@@ -124,3 +186,6 @@ CREATE INDEX IF NOT EXISTS idx_documents_activite ON documents(activite_id);
 CREATE INDEX IF NOT EXISTS idx_documents_echeance ON documents(date_echeance);
 CREATE INDEX IF NOT EXISTS idx_taches_activite ON taches(activite_id);
 CREATE INDEX IF NOT EXISTS idx_fichiers_document ON fichiers(document_id);
+CREATE INDEX IF NOT EXISTS idx_depenses_ligne ON depenses(ligne_id);
+CREATE INDEX IF NOT EXISTS idx_depenses_date ON depenses(date_depense);
+CREATE INDEX IF NOT EXISTS idx_budget_activite ON budget_lignes(activite_id);
