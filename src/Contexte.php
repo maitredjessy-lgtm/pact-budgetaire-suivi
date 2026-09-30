@@ -160,6 +160,17 @@ class Contexte
             'Responsable : ' . ($a['responsable_nom'] ?: 'non assigné'),
             'Description / notes : ' . ($a['description'] ?: 'n.d.'),
         ];
+        if (!empty($a['objectif'])) {
+            $l[] = 'Objectif : ' . $a['objectif'];
+        }
+        if (!empty($a['resultats'])) {
+            $l[] = 'Résultat(s) attendu(s) : ' . $a['resultats'];
+        }
+        if (!empty($a['acteurs'])) {
+            $registre = Institutions::registre();
+            $noms = array_map(fn ($k) => isset($registre[$k]) ? "{$registre[$k]['nom']} ({$registre[$k]['sigle']})" : $k, array_filter(explode(',', $a['acteurs'])));
+            $l[] = 'Acteurs institutionnels concernés : ' . implode(' ; ', $noms);
+        }
         foreach ($a['taches'] ?? [] as $t) {
             $l[] = "Tâche : {$t['titre']} ({$t['statut']}, échéance " . ($t['echeance'] ?: 'n.d.') . ')';
         }

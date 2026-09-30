@@ -11,6 +11,7 @@
     modeles: VueModeles,
     evaluation: VueEvaluation,
     finances: VueFinances,
+    institutions: VueInstitutions,
     assistant: VueAssistant,
   };
 

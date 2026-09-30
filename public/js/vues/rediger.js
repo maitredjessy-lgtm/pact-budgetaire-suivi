@@ -2,12 +2,14 @@
 const VueRediger = {
   async afficher(vue, params, route) {
     if (route === 'editeur') return this.editeur(vue, +params[0]);
-    return this.generateur(vue, params[0] === 'activite' ? +params[1] : null, params[0] === 'modele' ? +params[1] : null);
+    return this.generateur(vue, params[0] === 'activite' ? +params[1] : null, params[0] === 'modele' ? +params[1] : null, params[0] === 'acteur' ? params[1] : null);
   },
 
   // ------------------------------------------------------------------ generateur
-  async generateur(vue, activiteId, modeleId) {
-    const [modeles, acts] = await Promise.all([reference('modeles', true), reference('activites')]);
+  async generateur(vue, activiteId, modeleId, acteurCle) {
+    const [modeles, acts, acteurs] = await Promise.all([reference('modeles', true), reference('activites'), reference('acteurs')]);
+    // Depuis la page Institutions : on propose directement un modele de courrier
+    if (acteurCle && !modeleId) modeleId = (modeles.find((m) => m.type === 'courrier') || {}).id || null;
     const ia = Etat.config.ia;
     vue.innerHTML = `
       <div class="entete-vue"><div><h1>✍️ Rédiger un document avec l'IA</h1>
@@ -19,6 +21,10 @@ const VueRediger = {
           <label class="plein">1. Modèle de document *
             <select name="modele_id" required>${UI.optionsListe(modeles, 'id', (m) => `${UI.TYPES_DOC[m.type] || m.type} — ${m.nom}`, modeleId, 'Choisir un modèle…')}</select>
             <span class="muted" id="desc-modele" style="font-weight:400"></span>
+          </label>
+          <label class="plein" id="bloc-acteur" hidden>✉️ Institution destinataire du courrier
+            <select name="acteur">${UI.optionsListe(acteurs.filter((x) => x.destinataire), 'cle', (x) => `${x.sigle} — ${x.destinataire}`, acteurCle, 'Choisir un destinataire institutionnel…')}</select>
+            <span class="muted" style="font-weight:400">L'intitulé protocolaire et la formule d'appel sont ajoutés automatiquement ; le courrier est rédigé sur un ton institutionnel (« J'ai l'honneur de… », « haute considération »).</span>
           </label>
           <label class="plein">2. Activité concernée
             <select name="activite_id">${UI.optionsListe(acts, 'id', (a) => `${a.code ? a.code + ' — ' : ''}${a.titre}`, activiteId, 'Aucune (document général / rapport périodique)')}</select>
@@ -51,7 +57,19 @@ const VueRediger = {
       const libelles = { destinataire: 'Destinataire (ex. Monsieur le Directeur Général du Budget et des Finances)', formule_appel: "Formule d'appel (ex. Monsieur le Directeur Général)", objet: 'Objet', reference: 'Référence du courrier', periode: 'Période couverte (ex. janvier – juin 2026)' };
       const aSaisir = vars.filter((v) => libelles[v]);
       form.querySelector('#variables').innerHTML = aSaisir.length ? `<div class="grille-form">${aSaisir.map((v) => `<label>${libelles[v]} <input data-var="${v}"></label>`).join('')}</div>` : '';
+      // Le choix d'un destinataire institutionnel n'a de sens que pour un courrier
+      const courrier = !!m && m.type === 'courrier';
+      form.querySelector('#bloc-acteur').hidden = !courrier;
+      if (!courrier) form.querySelector('[name=acteur]').value = '';
+      majActeur();
     };
+    const majActeur = () => {
+      const x = acteurs.find((y) => y.cle === form.querySelector('[name=acteur]').value);
+      if (!x) return;
+      const dest = form.querySelector('[data-var=destinataire]'); if (dest) dest.value = x.destinataire;
+      const appel = form.querySelector('[data-var=formule_appel]'); if (appel) appel.value = x.appel;
+    };
+    form.querySelector('[name=acteur]').onchange = majActeur;
     selModele.onchange = majModele; majModele();
 
     const lire = () => {

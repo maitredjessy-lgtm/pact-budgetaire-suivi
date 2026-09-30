@@ -37,6 +37,15 @@ const REGLES = "Règles impératives :\n"
     . "- N'invente JAMAIS de chiffres, de noms de personnes, de dates ou de citations : si une information manque, écris [À compléter].\n"
     . "- Utilise le format Markdown : titres (#, ##, ###), listes à puces (-), tableaux (| a | b |), **gras**. Pas de blocs de code.\n";
 
+// Ton impose a tout courrier officiel (invitations, demandes d'audience, transmissions, relances…)
+const TON_COURRIER = "TON INSTITUTIONNEL OBLIGATOIRE POUR CE COURRIER :\n"
+    . "- Registre administratif et protocolaire ivoirien, courtois, sobre et respectueux de la hiérarchie ; vouvoiement et « nous » institutionnel au nom de Social Justice. Aucun ton familier, aucune formule commerciale, aucun point d'exclamation, aucun emoji.\n"
+    . "- Structure : en-tête de l'expéditeur, référence (N°…/SJ/PACT-UE/AAAA), lieu et date (Abidjan, le …), destinataire avec sa qualité complète (« Monsieur le Directeur Général… »), « Objet : » précis et concis, éventuellement « Réf. : » et « P.J. : », formule d'appel, corps, formule de politesse, signature avec nom et fonction, « Copie à : » si pertinent.\n"
+    . "- Corps en paragraphes courts et articulés : rappel du cadre (projet PACT Budgétaire financé par l'Union européenne, mis en œuvre par Social Justice avec IBP), objet de la démarche, date/heure/lieu ou demande précise, considération pour les missions de l'institution, disponibilité pour toute précision.\n"
+    . "- Formules recommandées : « J'ai l'honneur de… », « Nous avons l'honneur de solliciter… », « Nous vous serions reconnaissants de bien vouloir… », « Dans l'attente d'une suite favorable… », « Nous restons à votre entière disposition… ».\n"
+    . "- Clôture : « Veuillez agréer, [Monsieur/Madame le … ], l'expression de notre haute considération. » (ou « très haute considération » pour un ministre ou un chef d'institution).\n"
+    . "- N'invente aucune référence, personne, date ou chiffre : utilise [À compléter] si l'information manque.\n";
+
 $systemeBase = "Tu es l'assistant de rédaction et de suivi-évaluation de l'équipe du projet PACT BUDGÉTAIRE (ONG Social Justice, Côte d'Ivoire). "
     . "Tu es expert en gestion de projets financés par l'Union européenne, en finances publiques, transparence budgétaire (Enquête sur le Budget Ouvert), "
     . "suivi-évaluation (cadre logique, critères CAD-OCDE) et en rédaction administrative (TDR, rapports, courriers, comptes rendus).\n" . REGLES;
@@ -116,6 +125,13 @@ try {
                     'responsable' => $activite['responsable_nom'] ?: '[responsable]',
                 ];
             }
+            // Destinataire institutionnel choisi : intitule et formule d'appel protocolaires du referentiel
+            require_once __DIR__ . '/../../src/Institutions.php';
+            $acteur = !empty($b['acteur']) ? Institutions::pourCourrier((string) $b['acteur']) : null;
+            if ($acteur) {
+                $vars['destinataire'] = $acteur['destinataire'];
+                $vars['formule_appel'] = $acteur['appel'];
+            }
             foreach (($b['variables'] ?? []) as $k => $v) {
                 if (is_string($v) && trim($v) !== '') {
                     $vars[$k] = trim($v);
@@ -135,8 +151,13 @@ try {
             // 1. Documents reels de reference pour le style (sauf si l'utilisateur le desactive)
             $refs = ($b['style'] ?? true) ? Redaction::references($pdo, $modele, $activite, AI::provider() === 'groq' ? 1 : 2) : [];
 
+            $estCourrier = $modele['type'] === 'courrier';
+            if ($estCourrier && $acteur) {
+                $sources .= "DESTINATAIRE INSTITUTIONNEL : {$acteur['destinataire']} — {$acteur['nom']}. Rôle vis-à-vis du projet : {$acteur['role']}\n\n";
+            }
             $consigne = "Rédige le document complet « {$modele['nom']} » (type : {$modele['type']}).\n\n"
                 . "CONSIGNES DE RÉDACTION PROPRES À CE MODÈLE : " . ($modele['consignes'] ?: 'aucune') . "\n\n"
+                . ($estCourrier ? TON_COURRIER . "\n" : '')
                 . $sources
                 . (trim($b['instructions'] ?? '') !== '' ? "INSTRUCTIONS SUPPLÉMENTAIRES : " . trim($b['instructions']) . "\n\n" : '')
                 . Redaction::blocReferences($refs);
@@ -149,7 +170,7 @@ try {
             $relu = false;
             if ($b['relecture'] ?? true) {
                 $avant = $texte;
-                $texte = Redaction::relire($systemeBase, $texte, $structure, $modele['consignes'] ?: 'aucune', $sources ?: '(aucune information spécifique fournie)');
+                $texte = Redaction::relire($systemeBase, $texte, $structure, ($modele['consignes'] ?: 'aucune') . ($estCourrier ? "\n" . TON_COURRIER : ''), $sources ?:'(aucune information spécifique fournie)');
                 $relu = $texte !== $avant;
             }
 
@@ -173,7 +194,7 @@ try {
                 'developper' => "Développe ce texte de manière plus détaillée et argumentée (environ deux fois plus long), en restant factuel et sans inventer de chiffres.",
                 'resumer' => 'Résume ce texte de façon concise en conservant les informations essentielles.',
                 'corriger' => "Corrige uniquement l'orthographe, la grammaire, la ponctuation et la typographie française. Ne change rien d'autre.",
-                'formel' => 'Reformule ce texte dans un registre administratif et diplomatique adapté à un courrier officiel adressé à une institution.',
+                'formel' => "Reformule ce texte dans un ton institutionnel : registre administratif et protocolaire ivoirien, courtois et sobre, formules de considération (« J'ai l'honneur de… », « Nous vous serions reconnaissants de bien vouloir… »), adapté à un courrier officiel adressé à une institution. Sans changer le sens ni inventer d'information.",
                 'anglais' => 'Traduis ce texte en anglais professionnel (contexte bailleur Union européenne), en conservant la mise en forme Markdown.',
                 'puces' => 'Transforme ce texte en liste à puces claire et structurée.',
             ];

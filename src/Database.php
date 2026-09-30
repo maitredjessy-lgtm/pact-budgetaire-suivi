@@ -42,6 +42,8 @@ class Database
 
         self::migrate();
         self::seedIfEmpty();
+        require_once __DIR__ . '/Institutions.php';
+        Institutions::enrichirActivites(self::$pdo);
 
         return self::$pdo;
     }
@@ -75,7 +77,8 @@ class Database
     {
         // PostgreSQL distant : evite 15 allers-retours reseau par requete si le schema existe deja
         // (verifie la table la plus recente du schema : a mettre a jour a chaque nouvelle table)
-        if (self::$driver === 'pgsql' && self::$pdo->query("SELECT to_regclass('public.financements')")->fetchColumn()) {
+        if (self::$driver === 'pgsql' && self::$pdo->query("SELECT to_regclass('public.financements') IS NOT NULL AND EXISTS
+            (SELECT 1 FROM information_schema.columns WHERE table_name = 'activites' AND column_name = 'acteurs')")->fetchColumn()) {
             return;
         }
         $sql = file_get_contents(__DIR__ . '/../database/schema.sql');
@@ -92,7 +95,10 @@ class Database
     /** Colonnes ajoutees apres la premiere mise en production (bases deja existantes) */
     private static function ajouterColonnes(): void
     {
-        $colonnes = ['documents' => ['drive_id' => 'TEXT', 'drive_modifie' => 'TEXT', 'drive_empreinte' => 'TEXT']];
+        $colonnes = [
+            'documents' => ['drive_id' => 'TEXT', 'drive_modifie' => 'TEXT', 'drive_empreinte' => 'TEXT'],
+            'activites' => ['objectif' => 'TEXT', 'resultats' => 'TEXT', 'acteurs' => 'TEXT'],
+        ];
         foreach ($colonnes as $table => $defs) {
             if (self::$driver === 'pgsql') {
                 foreach ($defs as $col => $type) {

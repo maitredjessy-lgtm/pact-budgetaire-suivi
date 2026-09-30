@@ -50,14 +50,15 @@ const VueActivites = {
   },
 
   rafraichir() {
-    invalider('activites', 'responsables');
+    invalider('activites', 'responsables', 'acteurs');
     window.majPastille?.();
     const route = location.hash.split('/')[1] || 'tableau';
     if (['activites', 'tableau', 'echeances', 'equipe'].includes(route)) window.dispatchEvent(new HashChangeEvent('hashchange'));
   },
 
   async formulaire(a = {}) {
-    const resp = await reference('responsables');
+    const [resp, acteurs] = await Promise.all([reference('responsables'), reference('acteurs')]);
+    const choisis = new Set((a.acteurs || '').split(',').filter(Boolean));
     const m = UI.modale(`<h2>${a.id ? "Modifier l'activité" : 'Nouvelle activité'}</h2>
       <form class="grille-form">
         <label>Code <input name="code" value="${UI.esc(a.code)}" placeholder="ex. 2.3.1"></label>
@@ -71,6 +72,11 @@ const VueActivites = {
         <label>Priorité <select name="priorite">${UI.options(UI.PRIORITES, a.priorite || 'normale')}</select></label>
         <label>Statut <select name="statut">${UI.options(UI.STATUTS, a.statut || 'a_faire')}</select></label>
         <label>Avancement : <output>${a.avancement || 0}</output>% <input type="range" name="avancement" min="0" max="100" step="5" value="${a.avancement || 0}" oninput="this.previousElementSibling.value=this.value"></label>
+        <label class="plein">🎯 Objectif de l'activité <textarea name="objectif" rows="2">${UI.esc(a.objectif)}</textarea></label>
+        <label class="plein">✅ Résultat(s) attendu(s) <textarea name="resultats" rows="3">${UI.esc(a.resultats)}</textarea></label>
+        <fieldset class="plein acteurs-choix"><legend>🏛️ Acteurs institutionnels concernés ou susceptibles de l'être</legend>
+          ${acteurs.map((x) => `<label class="case"><input type="checkbox" data-acteur="${UI.esc(x.cle)}" ${choisis.has(x.cle) ? 'checked' : ''}><span>${UI.esc(x.sigle)} <span class="muted">— ${UI.esc(x.nom)}</span></span></label>`).join('')}
+        </fieldset>
         <label class="plein">Description / notes de suivi <textarea name="description" rows="4">${UI.esc(a.description)}</textarea></label>
         <datalist id="liste-comp">${[...new Set((Etat.cache.activites || []).map((x) => x.composante).filter(Boolean))].map((c) => `<option value="${UI.esc(c)}">`).join('')}</datalist>
         <div class="actions plein">
@@ -86,6 +92,7 @@ const VueActivites = {
       e.preventDefault();
       const data = UI.lireForm(form);
       data.avancement = +data.avancement;
+      data.acteurs = [...form.querySelectorAll('[data-acteur]:checked')].map((c) => c.dataset.acteur).join(',');
       const r = await UI.occupe(e.submitter, () => (a.id ? Api.put(`activites.php?id=${a.id}`, data) : Api.post('activites.php', data)));
       UI.fermerModale(); UI.toast('Activité enregistrée', 'ok');
       this.rafraichir();
@@ -99,9 +106,11 @@ const VueActivites = {
   },
 
   async ouvrir(id) {
-    const [a, docs, taches] = await Promise.all([
-      Api.get('activites.php', { id }), Api.get('documents.php', { activite_id: id }), Api.get('taches.php', { activite_id: id }),
+    const [a, docs, taches, acteurs] = await Promise.all([
+      Api.get('activites.php', { id }), Api.get('documents.php', { activite_id: id }), Api.get('taches.php', { activite_id: id }), reference('acteurs'),
     ]);
+    const cles = (a.acteurs || '').split(',').filter(Boolean);
+    const lies = cles.map((c) => acteurs.find((x) => x.cle === c)).filter(Boolean);
     const ecrire = UI.peutEcrire();
     const p = UI.panneau(`
       <div style="margin-right:2rem">
@@ -114,6 +123,15 @@ const VueActivites = {
         <div>📅 <b>Dates :</b> ${UI.date(a.date_debut)} → ${UI.date(a.date_echeance)} ${['termine', 'annule'].includes(a.statut) ? '' : UI.delai(a.date_echeance)}</div>
         <div>📍 <b>Lieu :</b> ${UI.esc(a.lieu || '—')}</div>
         ${a.budget_prevu ? `<div>💰 <b>Budget :</b> <a href="#/finances">${Math.round(a.budget_depense || 0).toLocaleString('fr-FR')} € dépensés / ${Math.round(a.budget_prevu).toLocaleString('fr-FR')} € prévus</a></div>` : ''}
+      </div>
+      <div class="carte fiche-objectif">
+        <div class="bloc"><h3>🎯 Objectif</h3><p>${a.objectif ? UI.esc(a.objectif) : '<span class="muted">Non renseigné — utilisez « Modifier ».</span>'}</p></div>
+        <div class="bloc"><h3>✅ Résultat(s) attendu(s)</h3><p style="white-space:pre-wrap">${a.resultats ? UI.esc(a.resultats) : '<span class="muted">Non renseigné.</span>'}</p></div>
+        <div class="bloc"><h3>🏛️ Acteurs institutionnels concernés ou susceptibles de l'être</h3>
+          ${lies.length ? `<div class="puces-acteurs">${lies.map((x) => `<a class="puce-acteur" href="#/institutions/${UI.esc(x.cle)}" title="${UI.esc(x.nom)} — ${UI.esc(x.role)}">${UI.esc(x.sigle)}</a>`).join('')}</div>
+            <ul class="liste-acteurs">${lies.map((x) => `<li><b>${UI.esc(x.sigle)}</b> — ${UI.esc(x.nom)}${x.site ? ` · <a href="${UI.esc(x.site)}" target="_blank" rel="noopener">site officiel ↗</a>` : ''} · <a href="#/institutions/${UI.esc(x.cle)}">actualités</a></li>`).join('')}</ul>`
+            : '<span class="muted">Aucun acteur renseigné.</span>'}
+        </div>
       </div>
       <div class="ligne-prog"><div class="haut"><b>Avancement</b><b>${a.avancement}%</b></div>${UI.prog(a.avancement, a.avancement >= 100 ? 'vert' : '')}</div>
       ${a.description ? `<p style="white-space:pre-wrap;background:var(--gris-clair);padding:.7rem;border-radius:8px;font-size:.9rem">${UI.esc(a.description)}</p>` : ''}

@@ -365,3 +365,29 @@ tr.cliquable:hover td { background: #f8fafc; }
   .apercu { border: none; max-height: none; overflow: visible; padding: 0; }
   body { background: #fff; }
 }
+
+/* ===== Objectif / résultats / acteurs institutionnels ===== */
+.fiche-objectif { background: var(--bleu-clair); border-color: transparent; padding: .8rem 1rem; }
+.fiche-objectif .bloc + .bloc { margin-top: .6rem; }
+.fiche-objectif h3 { margin: 0 0 .15rem; font-size: .9rem; color: var(--bleu); }
+.fiche-objectif p { margin: 0; font-size: .9rem; }
+.puces-acteurs { display: flex; flex-wrap: wrap; gap: .35rem; margin: .2rem 0 .4rem; }
+.puce-acteur { background: var(--bleu); color: #fff; padding: .15rem .6rem; border-radius: 999px; font-size: .8rem; font-weight: 600; text-decoration: none; }
+.puce-acteur:hover { background: var(--or); color: var(--bleu); }
+.liste-acteurs { margin: 0; padding-left: 1.1rem; font-size: .85rem; }
+.acteurs-choix { border: 1px solid var(--bord); border-radius: 8px; padding: .5rem .8rem; margin: 0 0 .8rem; }
+.acteurs-choix legend { font-weight: 600; font-size: .9rem; padding: 0 .3rem; }
+.acteurs-choix .case { display: flex; gap: .5rem; align-items: flex-start; font-weight: 400; margin: .2rem 0; }
+.acteurs-choix .case input { width: auto; margin-top: .25rem; }
+.grille-acteurs { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem; align-items: start; }
+.carte-acteur { margin: 0; }
+.carte-acteur.surligne { outline: 2px solid var(--or); }
+.carte-acteur h3 { margin: .3rem 0; font-size: 1rem; }
+.haut-acteur { display: flex; justify-content: space-between; align-items: center; gap: .5rem; }
+.haut-acteur .sigle { font-weight: 800; color: var(--bleu); font-size: 1.1rem; }
+.actions-acteur { display: flex; flex-wrap: wrap; gap: .4rem; margin: .6rem 0; }
+.actu { border-top: 1px solid var(--bord); padding-top: .5rem; margin-top: .4rem; }
+.liste-actu { margin: 0 0 .4rem; padding-left: 1.1rem; font-size: .88rem; }
+.liste-actu li { margin-bottom: .4rem; }
+.activites-liees { font-size: .85rem; margin-top: .5rem; }
+.activites-liees ul { margin: .3rem 0 0; padding-left: 1.1rem; }

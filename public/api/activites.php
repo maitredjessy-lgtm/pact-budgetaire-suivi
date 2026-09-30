@@ -7,7 +7,7 @@ $today = date('Y-m-d');
 $like = Database::like();
 
 $crud = new Crud($pdo, 'activites',
-    ['code', 'titre', 'description', 'composante', 'type_activite', 'responsable_id', 'lieu', 'date_debut', 'date_echeance', 'statut', 'priorite', 'avancement', 'budget_prevu', 'budget_depense'],
+    ['code', 'titre', 'description', 'composante', 'type_activite', 'responsable_id', 'lieu', 'objectif', 'resultats', 'acteurs', 'date_debut', 'date_echeance', 'statut', 'priorite', 'avancement', 'budget_prevu', 'budget_depense'],
     "SELECT x.*, r.nom AS responsable_nom, r.email AS responsable_email,
         (SELECT COUNT(*) FROM documents d WHERE d.activite_id = x.id) AS nb_documents,
         (SELECT COUNT(*) FROM documents d WHERE d.activite_id = x.id AND d.statut IN ('valide','envoye')) AS nb_documents_ok,

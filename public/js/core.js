@@ -35,7 +35,7 @@ const Etat = { user: null, config: {}, cache: {} };
 /** Donnees de reference partagees (listes deroulantes), rechargees apres modification */
 async function reference(nom, forcer = false) {
   if (!forcer && Etat.cache[nom]) return Etat.cache[nom];
-  const chemins = { responsables: 'responsables.php', activites: 'activites.php', modeles: 'modeles.php' };
+  const chemins = { responsables: 'responsables.php', activites: 'activites.php', modeles: 'modeles.php', acteurs: 'acteurs.php' };
   Etat.cache[nom] = await Api.get(chemins[nom]);
   return Etat.cache[nom];
 }

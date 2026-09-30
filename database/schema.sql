@@ -28,6 +28,9 @@ CREATE TABLE IF NOT EXISTS activites (
   type_activite TEXT DEFAULT 'atelier',          -- atelier | formation | reunion | plaidoyer | communication | etude | autre
   responsable_id INTEGER REFERENCES responsables(id) ON DELETE SET NULL,
   lieu TEXT,
+  objectif TEXT,                                 -- objectif de l'activite
+  resultats TEXT,                                -- resultat(s) attendu(s)
+  acteurs TEXT,                                  -- cles des acteurs institutionnels (database/seed_data/acteurs.php), separees par des virgules
   date_debut TEXT,
   date_echeance TEXT,
   statut TEXT NOT NULL DEFAULT 'a_faire',       -- a_faire | en_cours | termine | reporte | annule
