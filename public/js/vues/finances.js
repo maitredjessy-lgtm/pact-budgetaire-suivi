@@ -3,7 +3,7 @@ const VueFinances = {
   onglet: 'synthese',
   filtreBudget: { q: '', rubrique: '', partenaire: '' },
   periode: { debut: '', fin: '' },
-  TAUX: 655.957,
+  get TAUX() { return Devise.etat.taux; },
 
   eur: (v) => `${Number(v || 0).toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} €`,
   eur2: (v) => `${Number(v || 0).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`,
@@ -20,7 +20,7 @@ const VueFinances = {
     const admin = Etat.user.role === 'admin';
     vue.innerHTML = `
       <div class="entete-vue">
-        <div><h1>💰 Suivi financier</h1><p class="muted">Budget UE du projet, dépenses, fonds reçus et rapports financiers (montants en euros ; 1 € = 655,957 FCFA).</p></div>
+        <div><h1>💰 Suivi financier</h1><p class="muted">Budget UE du projet, dépenses, fonds reçus et rapports financiers — montants affichés en euros et en FCFA (<span class="point-live"></span> 1 € = ${this.TAUX.toLocaleString('fr-FR', { maximumFractionDigits: 3 })} FCFA, actualisé en continu).</p></div>
         <div class="actions">
           ${UI.peutEcrire() ? '<button id="btn-depense">+ Saisir une dépense</button>' : ''}
           ${admin ? '<button class="btn-sec" id="btn-import">📥 Importer / mettre à jour le budget</button>' : ''}
@@ -57,12 +57,12 @@ const VueFinances = {
     const retard = s.taux + 10 < s.taux_temps;
     zone.innerHTML = `
       <div class="kpis">
-        <div class="kpi"><div class="val">${this.eur(s.total)}</div><div class="lib">Budget total du projet</div></div>
-        <div class="kpi vert"><div class="val">${this.eur(s.depense)}</div><div class="lib">Dépensé (${this.pct(s.taux)})</div>${UI.prog(s.taux, 'vert')}</div>
+        <div class="kpi"><div class="val">${Devise.montant(s.total, { bloc: true })}</div><div class="lib">Budget total du projet</div></div>
+        <div class="kpi vert"><div class="val">${Devise.montant(s.depense, { bloc: true })}</div><div class="lib">Dépensé (${this.pct(s.taux)})</div>${UI.prog(s.taux, 'vert')}</div>
         <div class="kpi ${retard ? 'orange' : ''}"><div class="val">${this.pct(s.taux_temps)}</div><div class="lib">Durée écoulée (${s.mois_ecoules}/36 mois)${retard ? ' — exécution en retard sur le calendrier' : ''}</div>${UI.prog(s.taux_temps, 'or')}</div>
-        <div class="kpi"><div class="val">${this.eur(s.engage)}</div><div class="lib">Engagé, non encore payé</div></div>
-        <div class="kpi"><div class="val">${this.eur(s.recu)}</div><div class="lib">Fonds reçus</div></div>
-        <div class="kpi ${s.tresorerie < 0 ? 'rouge' : 'vert'}"><div class="val">${this.eur(s.tresorerie)}</div><div class="lib">Trésorerie disponible</div></div>
+        <div class="kpi"><div class="val">${Devise.montant(s.engage, { bloc: true })}</div><div class="lib">Engagé, non encore payé</div></div>
+        <div class="kpi"><div class="val">${Devise.montant(s.recu, { bloc: true })}</div><div class="lib">Fonds reçus</div></div>
+        <div class="kpi ${s.tresorerie < 0 ? 'rouge' : 'vert'}"><div class="val">${Devise.montant(s.tresorerie, { bloc: true })}</div><div class="lib">Trésorerie disponible</div></div>
       </div>
       ${s.alertes.length ? `<div class="carte"><h2>🔔 Alertes financières</h2>${s.alertes.map((a) => `<div class="${a.niveau === 'rouge' ? 'erreur' : 'alerte'}" style="margin-bottom:.4rem">${UI.esc(a.texte)}</div>`).join('')}</div>` : ''}
       <div class="deux-col">
@@ -143,9 +143,9 @@ const VueFinances = {
     const m = UI.modale(`<h2>${UI.esc(l.libelle)}</h2>
       <p class="muted">${l.rubrique}. ${UI.esc(l.rubrique_libelle || '')} — ${UI.esc(l.groupe || '')}</p>
       <div class="kpis">
-        <div class="kpi"><div class="val">${this.eur2(l.montant)}</div><div class="lib">Budget (${UI.esc(l.quantite ? `${l.quantite} ${l.unite || ''}` : '')})</div></div>
-        <div class="kpi vert"><div class="val">${this.eur2(l.depense)}</div><div class="lib">Dépensé (${this.pct(l.taux)})</div></div>
-        <div class="kpi ${l.montant - l.depense < 0 ? 'rouge' : ''}"><div class="val">${this.eur2(l.montant - l.depense)}</div><div class="lib">Reste (${this.fcfa((l.montant - l.depense) * this.TAUX)})</div></div>
+        <div class="kpi"><div class="val">${Devise.montant(l.montant, { bloc: true, dec: 2 })}</div><div class="lib">Budget (${UI.esc(l.quantite ? `${l.quantite} ${l.unite || ''}` : '')})</div></div>
+        <div class="kpi vert"><div class="val">${Devise.montant(l.depense, { bloc: true, dec: 2 })}</div><div class="lib">Dépensé (${this.pct(l.taux)})</div></div>
+        <div class="kpi ${l.montant - l.depense < 0 ? 'rouge' : ''}"><div class="val">${Devise.montant(l.montant - l.depense, { bloc: true, dec: 2 })}</div><div class="lib">Reste</div></div>
       </div>
       <h3>Dépenses imputées (${deps.length})</h3>
       ${this.tableDepenses(deps, false)}

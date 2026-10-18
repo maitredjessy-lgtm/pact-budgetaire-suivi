@@ -391,3 +391,45 @@ tr.cliquable:hover td { background: #f8fafc; }
 .liste-actu li { margin-bottom: .4rem; }
 .activites-liees { font-size: .85rem; margin-top: .5rem; }
 .activites-liees ul { margin: .3rem 0 0; padding-left: 1.1rem; }
+
+/* ===== Montants en deux devises (EUR / FCFA) ===== */
+.montant-devises { display: inline-flex; flex-direction: column; line-height: 1.25; }
+.montant-devises .e { font-size: 1em; }
+.montant-devises .fcfa { font-size: .56em; font-weight: 600; color: var(--gris); }
+.fcfa-inline { font-size: .82em; font-weight: 600; color: var(--gris); white-space: nowrap; }
+.kpi .lib .fcfa-inline, .kpi .lib .point-live { font-weight: 400; }
+
+/* Pastille "en direct" (taux de change actualise en continu) */
+.point-live { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--vert); vertical-align: middle; margin-right: .1rem; }
+.taux-widget { margin-top: .5rem; padding-top: .5rem; border-top: 1px solid rgba(255,255,255,.1); font-size: .74rem; color: #9fb0c7; cursor: default; }
+.taux-widget .point-live { background: #6ee7a8; }
+
+/* ===== Animations ===== */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes entreeVue { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .vue.entree { animation: entreeVue .32s ease both; }
+
+  @keyframes fondu { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes apparitionModale { from { opacity: 0; transform: scale(.94) translateY(8px); } to { opacity: 1; transform: none; } }
+  @keyframes glissePanneau { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: none; } }
+  @keyframes glisseToast { from { opacity: 0; transform: translateY(14px) scale(.97); } to { opacity: 1; transform: none; } }
+  @keyframes respire { 0%, 100% { opacity: .5; transform: scale(.85); } 50% { opacity: 1; transform: scale(1.15); } }
+  @keyframes pulseRetard { 0%, 100% { box-shadow: 0 0 0 0 rgba(192,57,43,.35); } 50% { box-shadow: 0 0 0 5px rgba(192,57,43,0); } }
+
+  .modale-voile, .voile { animation: fondu .18s ease both; }
+  .modale { animation: apparitionModale .25s cubic-bezier(.22,.9,.32,1.1) both; }
+  .panneau { animation: glissePanneau .28s cubic-bezier(.22,.9,.32,1.1) both; }
+  .toast:not([hidden]) { animation: glisseToast .3s cubic-bezier(.22,.9,.32,1.1) both; }
+  .point-live { animation: respire 1.8s ease-in-out infinite; }
+  .badge.retard { animation: pulseRetard 2s ease-in-out infinite; }
+
+  button, .btn, .carte, .kpi, .carte-modele, .carte-acteur, .barre nav a, tr.cliquable td,
+  .barre-prog > span, .barre-fin span, .onglets button {
+    transition: transform .16s ease, box-shadow .16s ease, background-color .16s ease, color .16s ease, filter .12s ease, border-color .16s ease;
+  }
+  .barre-prog > span, .barre-fin span { transition-property: width, background-color; transition-duration: .6s; transition-timing-function: ease; }
+  .carte:hover, .kpi:hover, .carte-modele:hover, .carte-acteur:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(16,24,40,.14); }
+  a.kpi { transition: transform .16s ease, box-shadow .16s ease; }
+  button:active:not(:disabled), .btn:active { transform: scale(.96); }
+  .kpi .val { transition: color .2s ease; }
+}

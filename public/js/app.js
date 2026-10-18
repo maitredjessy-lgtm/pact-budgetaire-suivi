@@ -24,7 +24,10 @@
     const vue = document.getElementById('vue');
     vue.innerHTML = '<div class="chargement"><span class="spinner fonce"></span> Chargement…</div>';
     window.scrollTo(0, 0);
-    Promise.resolve(routes[route].afficher(vue, params, route)).catch((e) => {
+    Promise.resolve(routes[route].afficher(vue, params, route)).then(() => {
+      UI.animerCompteurs(vue);
+      if (!UI.sansAnimation()) { vue.classList.remove('entree'); void vue.offsetWidth; vue.classList.add('entree'); }
+    }).catch((e) => {
       vue.innerHTML = `<div class="erreur">${UI.esc(e.message)}</div>`;
     });
   }
@@ -50,6 +53,7 @@
     document.getElementById('badge-utilisateur').innerHTML = `<strong style="color:#fff">${UI.esc(u.nom)}</strong><br><span>${roles[u.role] || u.role}</span>`;
     routeur();
     majPastille();
+    Devise.demarrer();
     setTimeout(() => VueDrive.auto(), 3000);
   }
 
@@ -113,6 +117,17 @@
   new MutationObserver(() => etiqueterTableaux(document.body)).observe(document.body, { childList: true, subtree: true });
   window.addEventListener('hashchange', routeur);
   window.addEventListener('session-expiree', () => afficherConnexion(true));
+
+  /* Pastille "taux de change" dans le pied de la barre laterale : visible sur toutes les pages,
+     actualisee en continu par Devise (voir core.js). */
+  function peindreTaux(e) {
+    const el = document.getElementById('taux-widget');
+    if (!el) return;
+    const quand = e.maj ? new Date(e.maj * 1000).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : '—';
+    el.title = e.source || '';
+    el.innerHTML = `<span class="point-live"></span> 1 € = ${Number(e.taux).toLocaleString('fr-FR', { maximumFractionDigits: 3 })} FCFA <span class="muted">· actualisé ${quand}</span>`;
+  }
+  Devise.onMaj(peindreTaux);
 
   (async function init() {
     try {

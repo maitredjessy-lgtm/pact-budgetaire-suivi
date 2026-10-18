@@ -122,7 +122,7 @@ const VueActivites = {
         <div>🧭 <b>Composante :</b> ${UI.esc(a.composante || '—')}</div>
         <div>📅 <b>Dates :</b> ${UI.date(a.date_debut)} → ${UI.date(a.date_echeance)} ${['termine', 'annule'].includes(a.statut) ? '' : UI.delai(a.date_echeance)}</div>
         <div>📍 <b>Lieu :</b> ${UI.esc(a.lieu || '—')}</div>
-        ${a.budget_prevu ? `<div>💰 <b>Budget :</b> <a href="#/finances">${Math.round(a.budget_depense || 0).toLocaleString('fr-FR')} € dépensés / ${Math.round(a.budget_prevu).toLocaleString('fr-FR')} € prévus</a></div>` : ''}
+        ${a.budget_prevu ? `<div>💰 <b>Budget :</b> <a href="#/finances">${Devise.montant(a.budget_depense || 0)} dépensés / ${Devise.montant(a.budget_prevu)} prévus</a></div>` : ''}
       </div>
       <div class="carte fiche-objectif">
         <div class="bloc"><h3>🎯 Objectif</h3><p>${a.objectif ? UI.esc(a.objectif) : '<span class="muted">Non renseigné — utilisez « Modifier ».</span>'}</p></div>

@@ -6,7 +6,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', '0');
 date_default_timezone_set(getenv('TZ') ?: 'Africa/Abidjan');
 
-foreach (['Database', 'Response', 'Auth', 'Crud', 'AI', 'Contexte', 'Docx', 'Redaction', 'Institutions'] as $classe) {
+foreach (['Database', 'Response', 'Auth', 'Crud', 'AI', 'Contexte', 'Docx', 'Redaction', 'Institutions', 'Devise'] as $classe) {
     require_once __DIR__ . "/../../src/{$classe}.php";
 }
 

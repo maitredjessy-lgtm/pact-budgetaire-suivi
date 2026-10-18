@@ -44,6 +44,11 @@ class Database
         self::seedIfEmpty();
         require_once __DIR__ . '/Institutions.php';
         Institutions::enrichirActivites(self::$pdo);
+        require_once __DIR__ . '/Docx.php';
+        require_once __DIR__ . '/Fichiers.php';
+        require_once __DIR__ . '/Pieces.php';
+        Pieces::importer(self::$pdo);
+        Pieces::rattacher(self::$pdo);
 
         return self::$pdo;
     }

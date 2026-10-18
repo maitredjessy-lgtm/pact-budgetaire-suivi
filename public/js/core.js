@@ -32,6 +32,45 @@ const Api = (() => {
 
 const Etat = { user: null, config: {}, cache: {} };
 
+/**
+ * Taux de change EUR -> FCFA, actualise depuis le serveur a intervalle regulier.
+ * Le FCFA (XOF) est arrime a l'euro a parite fixe (655,957) depuis 1999 : la valeur
+ * ne varie donc normalement pas, mais elle est bien re-interrogee en continu (et pas
+ * codee en dur cote client) pour rester correcte si la parite venait a changer.
+ */
+const Devise = (() => {
+  let etat = { taux: 655.957, source: 'parité fixe UEMOA/BCEAO', live: false, maj: null };
+  const ecouteurs = new Set();
+
+  function fcfa(eur) { return Math.round(Number(eur || 0) * etat.taux); }
+  const fmtEur = (v, dec = 0) => `${Number(v || 0).toLocaleString('fr-FR', { minimumFractionDigits: dec, maximumFractionDigits: dec })} €`;
+  const fmtFcfa = (v) => `${Math.round(Number(v || 0)).toLocaleString('fr-FR')} FCFA`;
+
+  /** Montant affiche dans les deux devises a la fois (pour les gros montants : bloc ; sinon en ligne) */
+  function montant(eur, { bloc = false, dec = 0 } = {}) {
+    const e = fmtEur(eur, dec);
+    const f = fmtFcfa(fcfa(eur));
+    return bloc
+      ? `<span class="montant-devises"><span class="e">${e}</span><span class="fcfa">≈ ${f}</span></span>`
+      : `${e} <span class="fcfa-inline">≈ ${f}</span>`;
+  }
+
+  async function rafraichir(forcer = false) {
+    try {
+      const r = await Api.get('taux.php', forcer ? { forcer: 1 } : {});
+      etat = r;
+      ecouteurs.forEach((fn) => { try { fn(etat); } catch (e) { /* ignore */ } });
+    } catch (e) { /* hors-ligne ou API indisponible : on garde la derniere valeur connue */ }
+  }
+
+  function demarrer() {
+    rafraichir();
+    setInterval(() => rafraichir(), 5 * 60 * 1000); // actualisation continue, toutes les 5 minutes
+  }
+
+  return { get etat() { return etat; }, fcfa, montant, rafraichir, demarrer, onMaj: (fn) => ecouteurs.add(fn) };
+})();
+
 /** Donnees de reference partagees (listes deroulantes), rechargees apres modification */
 async function reference(nom, forcer = false) {
   if (!forcer && Etat.cache[nom]) return Etat.cache[nom];
@@ -130,8 +169,39 @@ const UI = (() => {
   const prog = (v, cls = '') => `<div class="barre-prog ${cls}"><span style="width:${Math.max(0, Math.min(100, Number(v) || 0))}%"></span></div>`;
   const initiales = (nom) => (nom || '?').split(/\s+/).filter(Boolean).slice(0, 2).map((m) => m[0]).join('').toUpperCase();
 
+  const sansAnimation = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /** Anime de 0 (ou de la moitie) vers la valeur finale les compteurs chiffres affiches dans .kpi .val
+   *  (ou son sous-element .e pour les montants en deux devises). Purement visuel : n'affecte jamais
+   *  la valeur réellement stockée, qui est reposée telle quelle en fin d'animation. */
+  function animerCompteurs(racine = document) {
+    if (sansAnimation()) return;
+    racine.querySelectorAll('.kpi .val').forEach((el) => {
+      const cible = el.querySelector('.e') || (el.children.length === 0 ? el : null);
+      if (!cible) return;
+      const texte = cible.textContent.trim();
+      const m = texte.match(/^(-?[\d\s.,]*\d)(.*)$/);
+      if (!m) return;
+      const brut = m[1].replace(/\s/g, '');
+      const virgule = brut.includes(',') && !brut.includes('.');
+      const nombre = parseFloat(virgule ? brut.replace(/\./g, '').replace(',', '.') : brut.replace(/,/g, ''));
+      if (isNaN(nombre)) return;
+      const decimales = virgule ? (brut.split(',')[1] || '').length : 0;
+      const suffixe = m[2] || '';
+      const debut = performance.now();
+      const duree = 700;
+      const pas = (t) => {
+        const p = Math.min(1, (t - debut) / duree);
+        const v = nombre * (1 - (1 - p) ** 3); // easeOutCubic
+        cible.textContent = v.toLocaleString('fr-FR', { minimumFractionDigits: decimales, maximumFractionDigits: decimales }) + suffixe;
+        if (p < 1) requestAnimationFrame(pas); else cible.textContent = texte;
+      };
+      requestAnimationFrame(pas);
+    });
+  }
+
   return { esc, date, jours, delai, STATUTS, STATUTS_DOC, TYPES_DOC, TYPES_ACT, PRIORITES, badge, options, optionsListe,
-    toast, modale, fermerModale, panneau, fermerPanneau, lireForm, occupe, peutEcrire, prog, initiales };
+    toast, modale, fermerModale, panneau, fermerPanneau, lireForm, occupe, peutEcrire, prog, initiales, sansAnimation, animerCompteurs };
 })();
 
 /** Rendu Markdown minimal et sur (le HTML brut est echappe) */
