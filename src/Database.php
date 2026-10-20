@@ -64,11 +64,16 @@ class Database
         if (str_starts_with($p['host'] ?? '', 'console.')) {
             throw new RuntimeException("DATABASE_URL pointe vers la console Neon et non vers la base : utilisez la « connection string » (hôte en ep-….neon.tech).");
         }
+        // Tolere une URL mal copiee (nom de base absent ou "sslmode=require" pris pour le nom de la base)
+        $dbname = trim(urldecode($p['path'] ?? ''), '/');
+        if ($dbname === '' || str_contains($dbname, '=')) {
+            $dbname = 'neondb';
+        }
         $dsn = sprintf(
             'pgsql:host=%s;port=%d;dbname=%s;sslmode=%s;connect_timeout=8',
             $p['host'] ?? 'localhost',
             $p['port'] ?? 5432,
-            ltrim($p['path'] ?? '', '/'),
+            $dbname,
             $sslmode
         );
         $pdo = new PDO($dsn, urldecode($p['user'] ?? ''), urldecode($p['pass'] ?? ''));
