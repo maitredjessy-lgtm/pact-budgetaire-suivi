@@ -5,7 +5,7 @@
  */
 class Pieces
 {
-    private const VERSION = 'v1';
+    private const VERSION = 'v2';
 
     private const PIECES = [
         ['fichier' => 'TDR_2.2.1.1_Atelier_criteres_concours_ecoles_universites.docx', 'activite' => '2.2.1.1', 'type' => 'tdr',
@@ -18,6 +18,8 @@ class Pieces
          'titre' => 'Proposition de composition du jury du concours de la transparence budgétaire', 'date' => '2026-09-21'],
         ['fichier' => 'TDR_2.2.1.3_Atelier_lancement_concours_national.docx', 'activite' => '2.2.1.3', 'type' => 'tdr',
          'titre' => 'TDR 2.2.1.3 – Atelier de lancement du concours national de la transparence budgétaire (29 octobre 2026)', 'date' => '2026-09-21'],
+        ['fichier' => 'Note_Attentes_Participants_Concours_Transparence_Budgetaire.docx', 'activite' => '2.2.1.3', 'type' => 'note',
+         'titre' => 'Note – Ce qui est attendu des élèves et étudiants au concours national de la transparence budgétaire', 'date' => '2026-10-27'],
     ];
 
     /** Rattache aux activites les documents deja presents qui n'en ont pas (jamais d'ecrasement d'un lien existant) */
