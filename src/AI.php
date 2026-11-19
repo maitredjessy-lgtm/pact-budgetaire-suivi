@@ -21,8 +21,14 @@ class AI
         'openrouter' => ['prefixe' => 'sk-or-', 'url' => 'https://openrouter.ai/api/v1', 'modele' => 'meta-llama/llama-3.3-70b-instruct:free'],
     ];
 
+    private const CLAUDE_DEFAUT = 'claude-sonnet-5-5';
+
     public static function provider(): string
     {
+        // Claude (Anthropic) en direct : cle « sk-ant-... » ou AI_PROVIDER=claude
+        if (str_starts_with(self::key(), 'sk-ant-') || in_array(strtolower(getenv('AI_PROVIDER') ?: ''), ['claude', 'anthropic'], true)) {
+            return 'claude';
+        }
         foreach (self::FOURNISSEURS as $nom => $f) {
             if (str_starts_with(self::key(), $f['prefixe'])) {
                 return $nom;
@@ -47,6 +53,9 @@ class AI
             return trim(file_get_contents(self::fichierRemplacement()));
         }
         $m = getenv('AI_MODEL') ?: '';
+        if ($p === 'claude') {
+            return str_starts_with($m, 'claude') ? $m : self::CLAUDE_DEFAUT;
+        }
         // Un modele Gemini configure n'a pas de sens chez un autre fournisseur (et inversement)
         if ($m !== '' && ($p === 'gemini') === str_starts_with($m, 'gemini')) {
             return $m;
@@ -112,11 +121,45 @@ class AI
     public static function generate(string $system, array $messages, float $temperature = 0.4, int $maxTokens = 8192): string
     {
         if (!self::isConfigured()) {
-            throw new RuntimeException("L'IA n'est pas configurée : ajoutez la variable d'environnement AI_API_KEY (clé Gemini gratuite sur https://aistudio.google.com/apikey).");
+            throw new RuntimeException("L'IA n'est pas configurée : ajoutez la variable d'environnement AI_API_KEY (clé Claude sur https://console.anthropic.com/settings/keys, ou clé Gemini gratuite sur https://aistudio.google.com/apikey).");
         }
-        return self::provider() !== 'gemini'
-            ? self::openai($system, $messages, $temperature, $maxTokens)
-            : self::gemini($system, $messages, $temperature, $maxTokens);
+        switch (self::provider()) {
+            case 'claude':
+                return self::claude($system, $messages, $temperature, $maxTokens);
+            case 'gemini':
+                return self::gemini($system, $messages, $temperature, $maxTokens);
+            default:
+                return self::openai($system, $messages, $temperature, $maxTokens);
+        }
+    }
+
+    /** API Messages d'Anthropic : appel direct a Claude */
+    private static function claude(string $system, array $messages, float $temperature, int $maxTokens): string
+    {
+        $payload = [
+            'model' => self::model(),
+            'max_tokens' => $maxTokens,
+            'temperature' => $temperature,
+            'system' => $system,
+            'messages' => array_map(fn ($m) => [
+                'role' => $m['role'] === 'assistant' ? 'assistant' : 'user',
+                'content' => (string) $m['content'],
+            ], $messages),
+        ];
+        $data = self::post('https://api.anthropic.com/v1/messages', $payload, [
+            'x-api-key: ' . self::key(),
+            'anthropic-version: 2023-06-01',
+        ]);
+        $texte = '';
+        foreach ($data['content'] ?? [] as $bloc) {
+            if (($bloc['type'] ?? '') === 'text') {
+                $texte .= $bloc['text'];
+            }
+        }
+        if (trim($texte) === '') {
+            throw new RuntimeException('Réponse IA vide (raison : ' . ($data['stop_reason'] ?? 'inconnue') . ').');
+        }
+        return trim($texte);
     }
 
     private static function gemini(string $system, array $messages, float $temperature, int $maxTokens): string
@@ -211,7 +254,7 @@ class AI
                 $msg = "Quota gratuit momentanément atteint, réessayez dans une minute. ({$msg})";
             } elseif (stripos($msg, 'API key not valid') !== false || stripos($msg, 'API_KEY_INVALID') !== false || $code === 401) {
                 $msg = "Le fournisseur d'IA (" . self::provider() . ") refuse la clé AI_API_KEY enregistrée dans Render — valeur lue : « " . self::apercuCle() . " ». "
-                    . "Une clé Gemini fait environ 39 caractères, une clé Groq commence par « gsk_ ». "
+                    . "Une clé Claude commence par « sk-ant- », une clé Gemini fait environ 39 caractères, une clé Groq commence par « gsk_ ». "
                     . "Si ce début ne correspond pas à votre clé, la valeur collée dans Render n'est pas la bonne : recopiez la clé avec le bouton de copie du site (Gemini : https://aistudio.google.com/apikey — Groq : https://console.groq.com/keys).";
             } elseif ($code === 403) {
                 $msg = "Accès refusé par Google : la clé n'autorise pas l'API Gemini (créez-la depuis AI Studio plutôt que depuis Google Cloud). ({$msg})";
